@@ -7,11 +7,13 @@
 
 var cols, rows;
 var scl = 20;
-var w = window.innerWidth+10;
-var h = window.innerHeight+10;
+var w = window.innerWidth+20;
+var h = window.innerHeight+20;
 var amp = 0;
 var centerX = 0;
 var centerY = 0;
+var xSpeed = 0;
+var ySpeed = 0;
 
 var flying = 0;
 
@@ -19,7 +21,7 @@ var terrain = [];
 var speed = .1;
 
 function setup() {
-  createCanvas(window.innerWidth, window.innerHeight, WEBGL);//, WEBGL
+  createCanvas(window.innerWidth+20, window.innerHeight+20, WEBGL);//, WEBGL
   cols = w / scl;
   rows = h/ scl;
 
@@ -37,9 +39,13 @@ function draw() {
   rotateX(0);
   translate(-w/2, -h/2);
 
-  amp = 20;
-  centerX = map(mouseX, 0, window.innerWidth/2, 0, scl);
-  centerY = map(mouseY, 0, window.innerHeight/2, 0, scl);
+  centerX = (mouseX-width/2)/scl+width/2/scl;
+  centerY = (mouseY-height/2)/scl+height/2/scl;
+
+  xSpeed = abs(winMouseX-pwinMouseX);
+  ySpeed = abs(winMouseY-pwinMouseY);
+  if (xSpeed > amp) amp = constrain(xSpeed*1.5, 0, 40);
+  if (ySpeed > amp) amp = constrain(ySpeed*1.5, 0, 40);
 
   flying -= speed;
   var yoff = flying;
@@ -52,7 +58,7 @@ function draw() {
     yoff += 0.001;
   }
 
-  if (amp>=0.05) amp*=0.99;
+  if (amp>=0.9) amp*=0.993;
   else amp = 0;
 
   for (var y = 0; y < rows; y++) {
