@@ -1,5 +1,3 @@
-/* Coordinate calcuations inspired by Richard Wong's "Jelly Ball" (2010) */
-
 import toxi.physics3d.*;
 import toxi.physics3d.behaviors.*;
 import toxi.geom.*;
@@ -21,7 +19,8 @@ int time;
 boolean smoothing;
 
 void setup() {
-  size(1200, 800, P3D);
+  //size(displayWidth, displayHeight, P3D);
+  fullScreen(P3D);
   background(0);
   frameRate(60);
 
