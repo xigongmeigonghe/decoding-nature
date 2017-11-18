@@ -36,7 +36,8 @@ void setup() {
 }
 
 void draw() {
-  background(20);
+  background(10);
+  
   smooth();
   camera();
 
