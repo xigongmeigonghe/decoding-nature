@@ -19,5 +19,8 @@ class Mover {
     ellipse(this.position.x,this.position.y,10,10);
   }
 
+  move(movement) {
+    this.position.add(movement);
+  }
 
 }
