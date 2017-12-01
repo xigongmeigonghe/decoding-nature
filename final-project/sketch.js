@@ -9,8 +9,8 @@ function draw()
   background(0);
   fill(255,0,0);
 
-  if (){
-
+  if (m.position.x > width/2){
+    window.scrollTo(m.position.x - width/2, 0);
   }
 }
 
