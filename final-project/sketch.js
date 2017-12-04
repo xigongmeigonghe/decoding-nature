@@ -34,13 +34,27 @@ function setup() {
 
   /* Set up the world entrypoints in the main world */
 
-  JonahWorld = new World(500, WORLD_HEIGHT, 300, "JONAH'S WORLD", new Game(), "media/tree.png");
-  YufeiWorld = new World(1000, WORLD_HEIGHT, 300, "YUFEI'S WORLD", new Game(), "media/tree.png");
-  LuizeWorld = new World(1500, WORLD_HEIGHT, 300, "LUIZE'S WORLD", new Game(), "media/tree.png");
-  XiuaiWorld = new World(2000, WORLD_HEIGHT, 300, "XIUAI'S WORLD", new Game(), "media/tree.png");
-  RobertWorld = new World(2500, WORLD_HEIGHT, 300, "ROBER'S WORLD", new Game(), "media/tree.png");
-  KateWorld = new World(3000, WORLD_HEIGHT, 300, "KATE'S WORLD", new Game(), "media/tree.png");
-  PeterWorld = new World(3500, WORLD_HEIGHT, 300, "PETER'S WORLD", new Game(), "media/tree.png");
+  JonahWorld = new World(500, WORLD_HEIGHT, 300,
+    "You've reached Jonah's world!\nPress 'a' to enter.",
+    new Game(), "media/tree.png");
+  YufeiWorld = new World(1000, WORLD_HEIGHT, 300,
+    "You've reached Yufei's world!\nPress 'a' to enter.",
+    new Game(), "media/tree.png");
+  LuizeWorld = new World(1500, WORLD_HEIGHT, 300,
+    "You've reached Luize's world!\nPress 'a' to enter.",
+    new Game(), "media/tree.png");
+  XiuaiWorld = new World(2000, WORLD_HEIGHT, 300,
+      "You've reached Xiuai's world!\nPress 'a' to enter.",
+    new Game(), "media/tree.png");
+  RobertWorld = new World(2500, WORLD_HEIGHT, 300,
+      "You've reached Robert's world!\nPress 'a' to enter.",
+    new Game(), "media/tree.png");
+  KateWorld = new World(3000, WORLD_HEIGHT, 300,
+    "You've reached Kate's world!\nPress 'a' to enter.",
+    new Game(), "media/tree.png");
+  PeterWorld = new World(3500, WORLD_HEIGHT, 300,
+      "You've reached Peter's world!\nPress 'a' to enter.",
+    new Game(), "media/tree.png");
 
   worlds = [
     JonahWorld,
@@ -72,7 +86,6 @@ function draw() {
 
     if (m.position.x > world.position.x && m.position.x < world.position.x+world.width) {
       world.textBox.display();
-
       if (aPressed) world.run();
     }
   }
@@ -131,15 +144,6 @@ function portClose() {
   print('The serial port closed.');
 }
 
-
-// //creating the trees for the forest
-// function createForest(){
-//
-//   for(var i=0;i<numberOfTrees;i++){
-//     image(tree,2500+i*25,250,100,100);
-//   }
-//
-// }
 //
 // //creating the trees for the forest
 // function createCastle(){
