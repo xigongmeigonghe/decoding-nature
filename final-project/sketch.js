@@ -61,10 +61,10 @@ function draw()
     window.scrollTo(m.position.x-screen.width/2, 0);
   }
 
-  if (inData > 50){ // Right
+  if (inData > 50 || keyIsDown(RIGHT_ARROW)){ // Right
     m.move(5);
   }
-  else if (inData < 50) { // Left
+  else if (inData < 50 || keyIsDown(LEFT_ARROW)) { // Left
     m.move(-5);
   }
   else{
