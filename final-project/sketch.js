@@ -11,6 +11,8 @@ var worlds = [];
 
 /* State */
 var aPressed = false;
+var subWorldInProgress = null; // Game being played
+var isSubWorldInProgress = false; // Is the game active
 
 
 function setup() {
@@ -69,33 +71,46 @@ function setup() {
 }
 
 function draw() {
-  background(255);
-  fill(0);
+  if (isSubWorldInProgress) { // Update and run the game
+    subWorldInProgress.run()
+    subWorldInProgress.display();
 
-  //ground of world
-  rect(0, WORLD_HEIGHT, WORLD_WIDTH, 500);
-
-  if (m.position.x > screen.width/2){ // Move window with character
-    window.scrollTo(m.position.x-screen.width/2, 0);
-  }
-
-  for (var i = 0; i < worlds.length; i++) {
-    const world = worlds[i];
-
-    world.display();
-
-    if (m.position.x > world.position.x && m.position.x < world.position.x+world.width) {
-      world.textBox.display();
-      if (aPressed) world.run();
+    if (subWorldInProgress.isFinished) {
+      isSubWorldInProgress = false; // Continue on in the main world
     }
-  }
 
-  if (inData > 50 || keyIsDown(RIGHT_ARROW)){ // Move right and display
-    m.move(5);
-  } else if (inData < 50 || keyIsDown(LEFT_ARROW)) { // Move left and display
-    m.move(-5);
-  } else { // And display
-    m.display();
+  } else {
+    background(255);
+    fill(0);
+
+    //ground of world
+    rect(0, WORLD_HEIGHT, WORLD_WIDTH, 500);
+
+    if (m.position.x > screen.width/2){ // Move window with character
+      window.scrollTo(m.position.x-screen.width/2, 0);
+    }
+
+    for (var i = 0; i < worlds.length; i++) {
+      const world = worlds[i];
+
+      world.display();
+
+      if (m.position.x > world.position.x && m.position.x < world.position.x+world.width) {
+        world.textBox.display();
+        if (aPressed) {
+          subWorldInProgress = world.game;
+          isSubWorldInProgress = true;
+        }
+      }
+    }
+
+    if (inData > 50 || keyIsDown(RIGHT_ARROW)){ // Move right and display
+      m.move(5);
+    } else if (inData < 50 || keyIsDown(LEFT_ARROW)) { // Move left and display
+      m.move(-5);
+    } else { // And display
+      m.display();
+    }
   }
 
 }
