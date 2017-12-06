@@ -13,10 +13,12 @@ var worlds = [];
 var aPressed = false;
 var subWorldInProgress = null; // Game being played
 var isSubWorldInProgress = false; // Is the game active
+var firstFrameInSubworld = false;
+var firstFrameInMainWorld = false;
 
 
 function setup() {
-  createCanvas(WORLD_WIDTH, 700);
+  createCanvas(WORLD_WIDTH, screen.height);
 
   WORLD_HEIGHT = height-250;
 
@@ -24,7 +26,7 @@ function setup() {
 
   /* Set up the serial port */
   serial = new p5.SerialPort();       // make a new instance of the serialport library
-  serial.on('list', printList);  // set a callback function for the serialport list event
+  serial.on('list', printList);           // set a callback function for the serialport list event
   serial.on('connected', serverConnected); // callback for connecting to the server
   serial.on('open', portOpen);        // callback for the port opening
   serial.on('data', serialEvent);     // callback for when new data arrives
@@ -32,7 +34,7 @@ function setup() {
   serial.on('close', portClose);      // callback for the port closing
   var options = {baudrate: 115200};
   serial.list();                      // list the serial ports
-  serial.open(portName,options);              // open a serial port
+  serial.open(portName,options);      // open a serial port
 
   /* Set up the world entrypoints in the main world */
 
@@ -72,14 +74,26 @@ function setup() {
 
 function draw() {
   if (isSubWorldInProgress) { // Update and run the game
+    if (firstFrameInSubworld) {
+      subWorldInProgress.setup();
+      firstFrameInSubworld = false;
+      window.scrollTo(0, 0);
+    }
+
     subWorldInProgress.run()
     subWorldInProgress.display();
 
     if (subWorldInProgress.isFinished) {
       isSubWorldInProgress = false; // Continue on in the main world
+      firstFrameInMainWorld = true; // Indicate transition to main world
     }
 
   } else {
+    if (firstFrameInMainWorld) {
+      createCanvas(WORLD_WIDTH, screen.height); // Reset to main world canvas
+      firstFrameInMainWorld = false; // Done with transition
+    }
+
     background(255);
     fill(0);
 
@@ -99,7 +113,8 @@ function draw() {
         world.textBox.display();
         if (aPressed) {
           subWorldInProgress = world.game;
-          isSubWorldInProgress = true;
+          isSubWorldInProgress = true; // True until `isFinished` is set to true in game
+          firstFrameInSubworld = true; // Indicate transition to subworld
         }
       }
     }
@@ -158,43 +173,3 @@ function serialError(err) {
 function portClose() {
   print('The serial port closed.');
 }
-
-//
-// //creating the trees for the forest
-// function createCastle(){
-//
-//   rect(1050,100,30,30);
-//   rect(1090,100,30,30);
-//   rect(1130,100,30,30);
-//   for(var i=0;i<30*7;i+=30){
-//     rect(1060,110+i,30,30);
-//     rect(1090,110+i,30,30);
-//     rect(1120,110+i,30,30);
-//   }
-//
-//   for(var j=0;j<30*7;j+=30){
-//     rect(1150+j,160,30,30);
-//     rect(1150+j,180,30,30);
-//     rect(1150+j,200,30,30);
-//     if(j!=4*30 && j!=3*30 && j!=2*30){
-//       rect(1150+j,230,30,30);
-//       rect(1150+j,260,30,30);
-//       rect(1150+j,290,30,30);
-//     }
-//
-//     // rect(150+j,200+j,30,30);
-//   }
-//
-//   rect(1350,100,30,30);
-//   rect(1390,100,30,30);
-//   rect(1430,100,30,30);
-//   for(var i=0;i<30*7;i+=30){
-//     rect(1360,110+i,30,30);
-//     rect(1390,110+i,30,30);
-//     rect(1420,110+i,30,30);
-//   }
-//
-//
-//
-//
-// }

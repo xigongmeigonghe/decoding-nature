@@ -4,6 +4,10 @@ class Game {
     this.framesLeft = 300;
   }
 
+  setup() {
+    createCanvas(1000,1000);
+  }
+
   run() {
     this.framesLeft--;
   }
@@ -14,7 +18,7 @@ class Game {
 
     textSize(100);
     fill(255);
-    text("A GAME WITH\nHARD MATH!!!", 200, 300);
+    text("TEST GAME", 200, 300);
 
     textSize(30);
     fill(255);
