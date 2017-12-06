@@ -74,7 +74,7 @@ function setup() {
 
 function draw() {
   if (isSubWorldInProgress) { // Update and run the game
-    if (firstFrameInSubworld) {
+    if (firstFrameInSubworld) { // Execute on transition from main world
       subWorldInProgress.setup();
       firstFrameInSubworld = false;
       window.scrollTo(0, 0);
@@ -89,7 +89,7 @@ function draw() {
     }
 
   } else {
-    if (firstFrameInMainWorld) {
+    if (firstFrameInMainWorld) { // Execute on transition from subworld
       createCanvas(WORLD_WIDTH, screen.height); // Reset to main world canvas
       firstFrameInMainWorld = false; // Done with transition
     }
