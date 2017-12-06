@@ -2,19 +2,19 @@
 //              Zane Mountcastle & Nick White
 
 /* Constants */
-var WORLD_WIDTH = 3000;
-var WORLD_HEIGHT = null;
-var portName = '/dev/cu.usbmodem1411';
-var serial; // variable to hold an instance of the serialport library
-var inData;
-var worlds = [];
+const WORLD_WIDTH = 3000;
+let WORLD_HEIGHT = null; // Set on setup()
+const portName = '/dev/cu.usbmodem1411';
+let serial; // variable to hold an instance of the serialport library
+let inData;
+let worlds = [];
 
 /* State */
-var aPressed = false;
-var subWorldInProgress = null; // Game being played
-var isSubWorldInProgress = false; // Is the game active
-var firstFrameInSubworld = false;
-var firstFrameInMainWorld = false;
+let aPressed = false;
+let subWorldInProgress = null; // Game being played
+let isSubWorldInProgress = false; // Is the game active
+let firstFrameInSubworld = false;
+let firstFrameInMainWorld = false;
 
 
 function setup() {
@@ -32,7 +32,7 @@ function setup() {
   serial.on('data', serialEvent);     // callback for when new data arrives
   serial.on('error', serialError);    // callback for errors
   serial.on('close', portClose);      // callback for the port closing
-  var options = {baudrate: 115200};
+  let options = {baudrate: 115200};
   serial.list();                      // list the serial ports
   serial.open(portName,options);      // open a serial port
 
