@@ -83,7 +83,7 @@ function draw() {
     subWorldInProgress.run()
     subWorldInProgress.display();
 
-    if (subWorldInProgress.isFinished) {
+    if (subWorldInProgress.isGameOver) {
       isSubWorldInProgress = false; // Continue on in the main world
       firstFrameInMainWorld = true; // Indicate transition to main world
     }
