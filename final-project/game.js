@@ -22,6 +22,7 @@ var Game = function() {
    */
   this.run = function() {
     this.framesLeft--;
+    this.display();
   }
 
   /*

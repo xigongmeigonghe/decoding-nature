@@ -80,8 +80,7 @@ function draw() {
       window.scrollTo(0, 0);
     }
 
-    subWorldInProgress.run()
-    subWorldInProgress.display();
+    subWorldInProgress.run();
 
     if (subWorldInProgress.isGameOver) {
       isSubWorldInProgress = false; // Continue on in the main world
