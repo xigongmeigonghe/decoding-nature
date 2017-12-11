@@ -12,18 +12,20 @@ let worlds = [];
 /* State */
 let aPressed = false;
 let subWorldInProgress = null; // Game being played
+let letterInProgress = null;
 let isSubWorldInProgress = false; // Is the game active
 let firstFrameInSubworld = false;
 let firstFrameInMainWorld = false;
+let lettersFound = [];
 
 var dataInX = 0;
 var dataInY = 0;
 
 
 function setup() {
-  createCanvas(WORLD_WIDTH, screen.height);
+  createCanvas(WORLD_WIDTH, window.innerHeight);
 
-  WORLD_HEIGHT = height-250;
+  WORLD_HEIGHT = height-200;
 
   m = new Mover("media/run1K.png", "media/run2K.png", "media/run3K.png", "media/run4K.png", "media/run2K.png", WORLD_HEIGHT);
 
@@ -41,33 +43,34 @@ function setup() {
 
   /* Set up the world entrypoints in the main world */
 
-  StartHome = new World(100, WORLD_HEIGHT, 400, 300,
-     "Starting intro..", new Game(), "media/house.png");
+  StartHome = new World(100, WORLD_HEIGHT, 400, 270,
+     "Welcome to the Decoding Nature world!\nCollect the passcode letters in each\nworld to complete the game.",
+    new Game(), "media/house.png", '');
 
   JonahWorld = new World(900, WORLD_HEIGHT, 250, 200,
     "You've reached Jonah's world!\nPress 'a' to enter.",
-    new Game(), "media/atom.png");
+    new Game(), "media/atom.png", "a");
   YufeiWorld = new World(1900, WORLD_HEIGHT, 200,200,
     "You've reached Yufei's world!\nPress 'a' to enter.",
-    new Game(), "media/microscope.png");
+    new Game(), "media/microscope.png", 'b');
   LuizeWorld = new World(2900, WORLD_HEIGHT, 250, 200,
     "You've reached Luize's world!\nPress 'a' to enter.",
-    new Game(), "media/bug.png");
+    new Game(), "media/bug.png", 'c');
   XiuaiWorld = new World(3900, WORLD_HEIGHT, 300,200,
       "You've reached Xiuai's world!\nPress 'a' to enter.",
-    new Game(), "media/tree.png");
+    new Game(), "media/tree.png", 'd');
   RobertWorld = new World(4960, WORLD_HEIGHT, 300,200,
       "You've reached Robert's world!\nPress 'a' to enter.",
-    new Game(), "media/tree.png");
+    new Game(), "media/tree.png", 'e');
   KateWorld = new World(5900, WORLD_HEIGHT, 300,400,
     "You've reached Kate's world!\nPress 'a' to enter.",
-    new Game(), "media/rocket.png");
+    new Game(), "media/rocket.png", 'f');
   PeterWorld = new World(6900, WORLD_HEIGHT, 300,200,
       "You've reached Peter's world!\nPress 'a' to enter.",
-    new Game(), "media/tree.png");
+    new Game(), "media/tree.png", 'g');
 
   EndHome = new World(8400, WORLD_HEIGHT, 400, 300,
-     "End game..", new Game(), "media/house.png");
+     "End game..", new Game(), "media/house.png", '');
 
   worlds = [
     StartHome,
@@ -84,7 +87,6 @@ function setup() {
 }
 
 function draw() {
-  // console.log("in data: " + inData)
   if (isSubWorldInProgress) { // Update and run the game
     if (firstFrameInSubworld) { // Execute on transition from main world
       subWorldInProgress.setup();
@@ -95,6 +97,7 @@ function draw() {
     subWorldInProgress.run();
 
     if (subWorldInProgress.isGameOver) {
+      lettersFound.push(letterInProgress);
       isSubWorldInProgress = false; // Continue on in the main world
       firstFrameInMainWorld = true; // Indicate transition to main world
     }
@@ -111,6 +114,20 @@ function draw() {
     //ground of world
     rect(0, WORLD_HEIGHT, WORLD_WIDTH, 500);
 
+    // Passcode box
+    fill(255);
+    rect(m.position.x-150, WORLD_HEIGHT+40, 300, 100);
+
+    textSize(20);
+    fill(0);
+    text("Letters Collected:", m.position.x-130, WORLD_HEIGHT+70);
+
+    for (let i = 0; i < lettersFound.length; i++) {
+      textSize(20);
+      fill(0);
+      text(lettersFound[i]+", ", m.position.x-130+i*20, WORLD_HEIGHT+100);
+    }
+
     if (m.position.x > screen.width/2){ // Move window with character
       window.scrollTo(m.position.x-screen.width/2, 0);
     }
@@ -124,6 +141,7 @@ function draw() {
         world.textBox.display();
         if (aPressed) {
           subWorldInProgress = world.game;
+          letterInProgress = world.letter;
           isSubWorldInProgress = true; // True until `isFinished` is set to true in game
           firstFrameInSubworld = true; // Indicate transition to subworld
         }
@@ -161,6 +179,9 @@ function keyPressed() {
 
 function keyReleased() {
   if (key == 'a' || key == 'A') aPressed = false;
+  if (isSubWorldInProgress) {
+    subWorldInProgress.keyPressed(key);
+  }
 }
 
 // Stop arrow keys from moving window
