@@ -16,13 +16,16 @@ let isSubWorldInProgress = false; // Is the game active
 let firstFrameInSubworld = false;
 let firstFrameInMainWorld = false;
 
+var dataInX = 0;
+var dataInY = 0;
+
 
 function setup() {
   createCanvas(WORLD_WIDTH, screen.height);
 
   WORLD_HEIGHT = height-250;
 
-  m = new Mover("media/run1K.png", "media/run2K.png", "media/run3K.png", "media/idleK.png", WORLD_HEIGHT);
+  m = new Mover("media/run1K.png", "media/run2K.png", "media/run3K.png", "media/run4K.png", "media/run2K.png", WORLD_HEIGHT);
 
   /* Set up the serial port */
   serial = new p5.SerialPort();       // make a new instance of the serialport library
@@ -73,6 +76,7 @@ function setup() {
 }
 
 function draw() {
+  // console.log("in data: " + inData)
   if (isSubWorldInProgress) { // Update and run the game
     if (firstFrameInSubworld) { // Execute on transition from main world
       subWorldInProgress.setup();
@@ -119,13 +123,24 @@ function draw() {
       }
     }
 
-    if (inData > 50 || keyIsDown(RIGHT_ARROW)){ // Move right and display
-      m.move(5);
-    } else if (inData < 50 || keyIsDown(LEFT_ARROW)) { // Move left and display
-      m.move(-5);
-    } else { // And display
-      m.display();
-    }
+      if(dataInX == 512){
+        m.display();
+      }
+      else if (dataInX >512  || keyIsDown(RIGHT_ARROW)){ // Move right and display
+        m.move(5);
+      }
+      // else if (dataInX < 512 || keyIsDown(LEFT_ARROW)) { // Move left and display
+      //   m.move(-5);
+      // }
+
+
+     // if (dataInY > 520 || keyIsDown(UP_ARROW)) { // Move left and display
+     //    m.moveY(-5);
+     //  } else if (dataInY < 520 || keyIsDown(DOWN_ARROW)) { // Move left and display
+     //    m.moveY(5);
+     //  }
+
+
   }
 
 }
@@ -163,7 +178,37 @@ function portOpen() {
 }
 
 function serialEvent() {
-  inData = Number(serial.read());
+  // inData = Number(serial.readStringUntil('\n'));
+
+    // read the serial buffer:
+   var myString = serial.readStringUntil('\n');
+ // if you got any bytes other than the linefeed:
+   console.log("myString1: " + myString)
+ // split the string at the commas
+   myString = trim(myString);
+   // console.log("myString: " + myString)
+   // split the string at the commas
+
+   // and convert the sections into integers:
+   var sensors = int(split(myString, ','));
+   if(!isNaN(sensors[0]) ){
+     dataInX = sensors[0];
+     dataInY = sensors[1];
+  }
+  // console.log("dataX: "+ dataInX + " dataY: " + dataInY);
+   // print out the values you got:
+   // for (var sensorNum = 0; sensorNum < sensors.length; sensorNum++) {
+     // console.log("Sensor " + sensorNum + ": " + sensors[sensorNum] + "\t");
+
+   // add a linefeed after all the sensor values are printed:
+   // println();
+   // if (sensors.length > 1) {
+   //   xpos = map(sensors[0], 0,1023,0,width);
+   //   ypos = map(sensors[1], 0,1023,0,height);
+   //   fgcolor = sensors[2];
+   // }
+   // send a byte to ask for more data:
+   serial.write("A");
 }
 
 function serialError(err) {
