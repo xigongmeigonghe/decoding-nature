@@ -2,7 +2,7 @@
 //              Zane Mountcastle & Nick White
 
 /* Constants */
-const WORLD_WIDTH = 3000;
+const WORLD_WIDTH = 7500;
 let WORLD_HEIGHT = null; // Set on setup()
 const portName = '/dev/cu.usbmodem1411';
 let serial; // variable to hold an instance of the serialport library
@@ -41,36 +41,44 @@ function setup() {
 
   /* Set up the world entrypoints in the main world */
 
-  JonahWorld = new World(500, WORLD_HEIGHT, 300,
+  StartHome = new World(100, WORLD_HEIGHT, 400, 300,
+     "Starting intro..", new Game(), "media/house.png");
+
+  JonahWorld = new World(900, WORLD_HEIGHT, 250, 200,
     "You've reached Jonah's world!\nPress 'a' to enter.",
-    new Game(), "media/tree.png");
-  YufeiWorld = new World(1000, WORLD_HEIGHT, 300,
+    new Game(), "media/atom.png");
+  YufeiWorld = new World(1900, WORLD_HEIGHT, 200,200,
     "You've reached Yufei's world!\nPress 'a' to enter.",
-    new Game(), "media/tree.png");
-  LuizeWorld = new World(1500, WORLD_HEIGHT, 300,
+    new Game(), "media/microscope.png");
+  LuizeWorld = new World(2900, WORLD_HEIGHT, 250, 200,
     "You've reached Luize's world!\nPress 'a' to enter.",
-    new Game(), "media/tree.png");
-  XiuaiWorld = new World(2000, WORLD_HEIGHT, 300,
+    new Game(), "media/bug.png");
+  XiuaiWorld = new World(3900, WORLD_HEIGHT, 300,200,
       "You've reached Xiuai's world!\nPress 'a' to enter.",
     new Game(), "media/tree.png");
-  RobertWorld = new World(2500, WORLD_HEIGHT, 300,
+  RobertWorld = new World(4960, WORLD_HEIGHT, 300,200,
       "You've reached Robert's world!\nPress 'a' to enter.",
     new Game(), "media/tree.png");
-  KateWorld = new World(3000, WORLD_HEIGHT, 300,
+  KateWorld = new World(5900, WORLD_HEIGHT, 300,400,
     "You've reached Kate's world!\nPress 'a' to enter.",
-    new Game(), "media/tree.png");
-  PeterWorld = new World(3500, WORLD_HEIGHT, 300,
+    new Game(), "media/rocket.png");
+  PeterWorld = new World(6900, WORLD_HEIGHT, 300,200,
       "You've reached Peter's world!\nPress 'a' to enter.",
     new Game(), "media/tree.png");
 
+  EndHome = new World(8400, WORLD_HEIGHT, 400, 300,
+     "End game..", new Game(), "media/house.png");
+
   worlds = [
+    StartHome,
     JonahWorld,
     YufeiWorld,
     LuizeWorld,
     XiuaiWorld,
     RobertWorld,
     KateWorld,
-    PeterWorld
+    PeterWorld,
+    EndHome
   ];
 
 }
@@ -122,15 +130,18 @@ function draw() {
       }
     }
 
-      if(dataInX == 512){
-        m.display();
-      }
-      else if (dataInX >512  || keyIsDown(RIGHT_ARROW)){ // Move right and display
+      // if(dataInX){
+      //
+      // }
+      if (dataInX >750  || keyIsDown(RIGHT_ARROW)){ // Move right and display
         m.move(5);
       }
-      // else if (dataInX < 512 || keyIsDown(LEFT_ARROW)) { // Move left and display
-      //   m.move(-5);
-      // }
+      else if (dataInX < 400 || keyIsDown(LEFT_ARROW)) { // Move left and display
+        m.move(-5);
+      }
+      else{
+        m.display();
+      }
 
 
      // if (dataInY > 520 || keyIsDown(UP_ARROW)) { // Move left and display

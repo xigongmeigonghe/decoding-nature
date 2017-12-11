@@ -1,11 +1,11 @@
 class World {
-  constructor(_positionX, _positionY, _width, _message, _game, _displayImage) {
+  constructor(_positionX, _positionY, _width, _height, _message, _game, _displayImage) {
     this.position = createVector(_positionX, _positionY);
     this.width = _width;
     this.textBox = new Textbox(this.position, _message);
     this.game = _game;
     this.displayImage = loadImage(_displayImage);
-    this.imageHeight = 200;
+    this.imageHeight = _height;
   }
 
   display() {
