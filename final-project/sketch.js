@@ -2,7 +2,7 @@
 //              Zane Mountcastle & Nick White
 
 /* Constants */
-const WORLD_WIDTH = 7500;
+const WORLD_WIDTH = 7900;
 let WORLD_HEIGHT = null; // Set on setup()
 const portName = '/dev/cu.usbmodem1411';
 let serial; // variable to hold an instance of the serialport library
@@ -18,12 +18,55 @@ let firstFrameInMainWorld = false;
 
 var dataInX = 0;
 var dataInY = 0;
+var microscope;
+var jar;
+var bug;
+// var gif;
+
+//Robert's vars
+var angleBarraell=-(3.14)/7;
+var shot=false;
+//power level cannon
+var powerIncrease= 0;
+var angleChange=.1;
+var grav=.01;
+var angleChangevalue=.01;
+var hit=false;
+
+//Luize's
+var luizesCrazyGlobalVariableHAHAHAHA_butreally_gameLose= false;
+
+
+
+function preload(){
+  base=loadImage("subworlds/PrastGame/cannonBaseMid.png");
+  bar=loadImage("subworlds/PrastGame/cannonBarMid.png");
+  target=loadImage("subworlds/PrastGame/castle2.png");
+  castle=loadImage("subworlds/PrastGame/castle2.png");
+  bg=loadImage("subworlds/PrastGame/bg.jpg")
+  flame= loadImage("subworlds/PrastGame/flame.png");
+  rock= loadImage("subworlds/PrastGame/rock.png");
+  pacmanImg = loadImage("subworlds/yufeiGame/virus.png");
+  ghostImg = loadImage("subworlds/yufeiGame/ghost.png");
+  foodImg = loadImage("subworlds/yufeiGame/cell.png");
+  boomImg = loadImage("subworlds/yufeiGame/boom.png");
+
+
+}
 
 
 function setup() {
   createCanvas(WORLD_WIDTH, screen.height);
+   // gif = loadGif('atomgif.gif');
 
   WORLD_HEIGHT = height-250;
+  var atom  = createImg("media/atomgif.gif");
+  atom.position(1325,WORLD_HEIGHT-75);
+  atom.size(20,20);
+  microscope = loadImage("media/microscope.png");
+  jar = loadImage("media/jar.png");
+  bug = loadImage("media/bug.png");
+
 
   m = new Mover("media/run1K.png", "media/run2K.png", "media/run3K.png", "media/run4K.png", "media/run2K.png", WORLD_HEIGHT);
 
@@ -41,33 +84,34 @@ function setup() {
 
   /* Set up the world entrypoints in the main world */
 
-  StartHome = new World(100, WORLD_HEIGHT, 400, 300,
-     "Starting intro..", new Game(), "media/house.png");
+  StartHome = new World(100, WORLD_HEIGHT, 600, 500,
+     "Locked out of your own home! \nGo explore the world to try to\nremember your password!", new Game(), "media/house.png");
 
-  JonahWorld = new World(900, WORLD_HEIGHT, 250, 200,
-    "You've reached Jonah's world!\nPress 'a' to enter.",
-    new Game(), "media/atom.png");
-  YufeiWorld = new World(1900, WORLD_HEIGHT, 200,200,
-    "You've reached Yufei's world!\nPress 'a' to enter.",
-    new Game(), "media/microscope.png");
-  LuizeWorld = new World(2900, WORLD_HEIGHT, 250, 200,
-    "You've reached Luize's world!\nPress 'a' to enter.",
-    new Game(), "media/bug.png");
-  XiuaiWorld = new World(3900, WORLD_HEIGHT, 300,200,
-      "You've reached Xiuai's world!\nPress 'a' to enter.",
+  JonahWorld = new World(1290, WORLD_HEIGHT, 100, 50,
+    "What hints can you find in the atomic\nworld? Press 'A' to Enter!",
+    new Game(), "media/table.png");
+  YufeiWorld = new World(1900, WORLD_HEIGHT, 100,50,
+    "The atomic world helped, but now its\ntime to think a little bigger.\nPress 'A' to Enter!",
+    new YufeisGame(), "media/table.png");
+  LuizeWorld = new World(2900, WORLD_HEIGHT, 100, 50,
+    "Maybe putting multiple cells together\nwill lead you to another clue!\nPress 'A' to Enter!",
+    new LuizeGame(), "media/table.png");
+  XiuaiWorld = new World(3900, WORLD_HEIGHT, 400,600,
+      "This tree seems like a place you\nwould rest. Maybe you left a clue here.\nPress 'A' to Enter!",
     new Game(), "media/tree.png");
-  RobertWorld = new World(4960, WORLD_HEIGHT, 300,200,
-      "You've reached Robert's world!\nPress 'a' to enter.",
-    new Game(), "media/tree.png");
-  KateWorld = new World(5900, WORLD_HEIGHT, 300,400,
-    "You've reached Kate's world!\nPress 'a' to enter.",
+  RobertWorld = new World(4960, WORLD_HEIGHT, 800,600,
+      "This castle looks like the perfect place\nto hide a clue! Press 'A' to Enter!",
+    new Game(), "media/castle.png");
+  KateWorld = new World(6500, WORLD_HEIGHT, 300,400,
+    "You've found all the clues here on Earth,\nbut that isn't enough! Press 'A' to Enter!",
     new Game(), "media/rocket.png");
-  PeterWorld = new World(6900, WORLD_HEIGHT, 300,200,
-      "You've reached Peter's world!\nPress 'a' to enter.",
-    new Game(), "media/tree.png");
+  PeterWorld = new World(7000, WORLD_HEIGHT, 300,200,
+      "Looks like you need to travel some more\nto find the final clue! Press 'A' to Enter!",
+    new Game(), "media/blank.png");
 
-  EndHome = new World(8400, WORLD_HEIGHT, 400, 300,
-     "End game..", new Game(), "media/house.png");
+  EndHome = new World(7400, WORLD_HEIGHT, 600, 500,
+     "Home sweet home! You remembered\nyour code, and you have successfully\nmade it back! Congrats!",
+     new Game(), "media/house.png");
 
   worlds = [
     StartHome,
@@ -87,6 +131,7 @@ function draw() {
   // console.log("in data: " + inData)
   if (isSubWorldInProgress) { // Update and run the game
     if (firstFrameInSubworld) { // Execute on transition from main world
+      console.log(subWorldInProgress)
       subWorldInProgress.setup();
       firstFrameInSubworld = false;
       window.scrollTo(0, 0);
@@ -107,6 +152,9 @@ function draw() {
 
     background(255);
     fill(0);
+    image(microscope,1930,WORLD_HEIGHT-70,40,45);
+    image(bug,2920,WORLD_HEIGHT-70,35,40);
+    image(jar,2920,WORLD_HEIGHT-70,50,60);
 
     //ground of world
     rect(0, WORLD_HEIGHT, WORLD_WIDTH, 500);
@@ -122,7 +170,10 @@ function draw() {
 
       if (m.position.x > world.position.x && m.position.x < world.position.x+world.width) {
         world.textBox.display();
+        // console.log("displaying" + world)
         if (aPressed) {
+          console.log("aaaa")
+          console.log(world.game)
           subWorldInProgress = world.game;
           isSubWorldInProgress = true; // True until `isFinished` is set to true in game
           firstFrameInSubworld = true; // Indicate transition to subworld
@@ -134,11 +185,11 @@ function draw() {
       //
       // }
       if (dataInX >750  || keyIsDown(RIGHT_ARROW)){ // Move right and display
-        m.move(5);
+        m.move(8);
       }
-      else if (dataInX < 400 || keyIsDown(LEFT_ARROW)) { // Move left and display
-        m.move(-5);
-      }
+      // else if (dataInX < 400 || keyIsDown(LEFT_ARROW)) { // Move left and display
+      //   m.move(-5);
+      // }
       else{
         m.display();
       }

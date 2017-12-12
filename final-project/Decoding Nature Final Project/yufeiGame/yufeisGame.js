@@ -21,7 +21,7 @@
  ******************************************************************************/
 
 
-var YufeiGame = function() {
+var YufeisGame = function() {
   // Variables for Pong
   this.player;
   this.computer;
@@ -37,12 +37,24 @@ var YufeiGame = function() {
   // var pacmanImg;
   this.points;
   this.chances = 3;
-  this.ghost;
+  this.ghost1;
+  this.ghost2;
   // var ghostImg;
-  this.ghosts = [];
-  this.activeGhosts = [];
+  //this.ghosts = [];
+  //this.activeGhosts = [];
   /* Change this.isGameOver to true when the game is complete */
   this.isGameOver= false;
+  this.pacmanImg;
+  this.ghostImg;
+  this.foodImg;
+  this.boomImg;
+
+  this.preload = function() {
+    this.pacmanImg = loadImage("virus.png");
+    this.ghostImg = loadImage("ghost.png");
+    this.foodImg = loadImage("cell.png");
+    this.boomImg = loadImage("boom.png");
+  }
 
   /*
    * This method is called once when the game is initialized. Set up the canvas here.
@@ -56,8 +68,8 @@ var YufeiGame = function() {
 
     // Put your setup code here
     this.platformMaze = new Platform(21, 25);
-
-    this.pacman = new Pacman(32,16*22, pacmanImg);
+    
+    this.pacman = new Pacman(32, 16*22, this.pacmanImg);
 
     for (var i = 0; i < this.platformMaze.getRows(); i++) {
       for (var j = 0; j < this.platformMaze.getColumns(); j++) {
@@ -65,13 +77,16 @@ var YufeiGame = function() {
           this.bricks.push(new Brick(j*32 + 32*8, i*32));
         }
         else if(this.platformMaze.getElement(i, j) === '-') {
-          this.foods.push(new Food(j*32 + 32*8, i*32, foodImg));
+          this.foods.push(new Food(j*32 + 32*8, i*32, this.foodImg));
         }
         else if(this.platformMaze.getElement(i, j) === 'g') {
-          this.ghosts.push(new Ghost(j*32 + 32*8, i*32, ghostImg));
+          this.ghost1 = new Ghost(j*32 + 32*8, i*32, this.ghostImg);
+        }
+        else if(this.platformMaze.getElement(i, j) === 'h') {
+          this.ghost2 = new Ghost(j*32 + 32*8, i*32, this.ghostImg);
         }
       }
-      activateGhosts();
+      // this.activateGhosts();
     }
     this.player = new Player();
     this.computer = new Computer(this.pacman);
@@ -99,7 +114,19 @@ var YufeiGame = function() {
     this.computer.show();
     this.computer.move();
 
+    // Check collision between ghost and bricks
+    for(i = 0; i < this.bricks.length; i++){
+        this.ghost1.direction = this.ghost1.brickCollision(this.bricks[i]);//(pacman.direction + 3) % 4;
+    }
+    this.ghost1.move(this.ghost1.direction);
+    print(this.ghost1.x, this.ghost1.y);
 
+    for(i = 0; i < this.bricks.length; i++){
+        this.ghost2.direction = this.ghost2.brickCollision(this.bricks[i]);//(pacman.direction + 3) % 4;
+    }
+    this.ghost2.move(this.ghost2.direction);
+    
+    
     // Check collision between pacman and bricks
     for(i = 0; i < this.bricks.length; i++){
         this.pacman.direction = this.pacman.brickcollision(this.bricks[i]);//(pacman.direction + 3) % 4;
@@ -114,7 +141,7 @@ var YufeiGame = function() {
           }
         }
     }
-
+    
     if (this.pacman.isHeld === 0) {
       if (this.pacman.collision(this.player)) {
         this.pacman.Velocity = 0;
@@ -124,12 +151,12 @@ var YufeiGame = function() {
       this.pacman.x = 32;
       this.pacman.y = this.player.y;
     }
-
+    
     if (this.pacman.collision(this.computer)) {
       this.pacman.Velocity = 5;
       this.pacman.direction = 2;
     }
-
+    
     // Pacman
     for (var i = 0; i < this.bricks.length; i++) {
       this.bricks[i].show();
@@ -137,106 +164,134 @@ var YufeiGame = function() {
     for(var i = 0; i < this.foods.length; i++) {
       this.foods[i].show();
     }
-    for(var i = 0; i < this.ghosts.length; i++) {
-      this.ghosts[i].show();
-    }
+    this.ghost1.show();
+    this.ghost2.show();
     this.pacman.show();
 
-    for (var i = 0; i < this.activeGhosts.length; i++) {
-      this.activeGhosts[i].move(this.bricks);
-      this.activeGhosts[i].show();
-      if (this.activeGhosts[i].collision(this.pacman)) {
-        this.chances --;
-      }
-    }
+    // for (j = 0; j < this.bricks.length; j++){
+    //   for(i = 0; i < this.activeGhosts.length; i++){
+    //     this.activeGhosts[i].direction = this.activeGhosts[i].brickCollision(this.bricks[j]);//(pacman.direction + 3) % 4;
+    //     this.activeGhosts[i].move(this.activeGhosts[i].direction);
+    //     this.activeGhosts[i].show();
+    //     if (this.activeGhosts[i].collision(this.pacman)) {
+    //       this.chances --;
+    //     }
+    //   }
+        
+    // }
+    
+    
+
+    
+    // for (var i = 0; i < this.activeGhosts.length; i++) {
+    //   this.activeGhosts[i].move(this.bricks);
+    //   this.activeGhosts[i].show();
+    //   if (this.activeGhosts[i].collision(this.pacman)) {
+    //     this.chances --;
+    //   }
+    // }
     //checkWin();
-    showWinner();
+    this.showWinner();
   }
 
-  function activateGhosts(){
-    if (this.ghosts.length > 0) {
-      this.activeGhosts.push(this.ghosts[this.ghosts.length - 1])
-      this.ghosts.splice(this.ghosts.length - 1, 1)
-      this.activeGhosts[this.activeGhosts.length - 1].outOfBox(this.platformMaze);
-    }
-    setTimeout(activateGhosts,7000);
-  }
+ // this.activateGhosts = function(){
+ //    if (this.ghosts.length > 0) {
+ //      this.activeGhosts.push(this.ghosts[this.ghosts.length - 1])
+ //      this.ghosts.splice(this.ghosts.length - 1, 1)
+ //      // this.activeGhosts[this.activeGhosts.length - 1].outOfBox(this.platformMaze);
+ //    }
+ //    setTimeout(this.activateGhosts,7000);
+ //  }
 
-function showWinner() {
+this.showWinner = function() {
   if (this.chances === 0) {
     background(255);
     textSize(80);
     fill(0);
     text("YOU LOSE", width/2 - 150, height/2);
+    textSize(48);
+    text("PRESS SHIFT TO RESTART", width/2 - 250, height/2 + 100);
   }
+  
   if (this.player.points > 60) {
     text("YOU WIN!", 20, 80);
     fill(255, 0, 0);
-    rect(32*16, 96, 160, 96);
-    rect(32*24, 96, 160, 96);
+    rect(32*16, 32*3, 160, 96);
+    rect(32*20, 32*3, 96, 96);
+    rect(32*24, 32*3, 160, 96);
     rect(32*13, 32*7, 96, 96);
+    rect(32*13, 32*10, 96, 96);
     rect(32*27, 32*7, 96, 96);
     rect(32*13, 32*13, 96, 96);
+    rect(32*27, 32*10, 96, 96);
     rect(32*27, 32*13, 96, 96);
     rect(32*16, 32*17, 160, 96);
+    rect(32*20, 32*17, 96, 96);
     rect(32*24, 32*17, 160, 96);
+    this.isGameOver = true;
   }
+
   if (this.pacman.x < 0) {
     background(255);
     textSize(80);
     fill(0);
     text("YOU LOSE", width/2 - 150, height/2);
-    this.isGameOver = true;
+    textSize(48);
+    text("PRESS SHIFT TO RESTART", width/2 - 250, height/2 + 100);
   }
+
+  if (this.ghost1.collision(this.pacman)) {
+    background(255);
+    imageMode(CENTER);
+    image(this.boomImg,width/2,height/2);
+  }
+
+  if (this.ghost2.collision(this.pacman)) {
+    background(255);
+    imageMode(CENTER);
+    image(this.boomImg,width/2,height/2);
+  }
+
   if (this.pacman.y < 0 && this.pacman.x < width/2) {
     background(255);
     textSize(80);
     fill(0);
     text("YOU LOSE", width/2 - 150, height/2);
-    this.isGameOver = true;
+    textSize(48);
+    text("PRESS SHIFT TO RESTART", width/2 - 250, height/2 + 100);
   }
+
   if (this.pacman.y > height && this.pacman.x < width/2) {
     background(255);
     textSize(80);
     fill(0);
     text("YOU LOSE", width/2 - 150, height/2);
-    this.isGameOver = true;
+    textSize(48);
+    text("PRESS SHIFT TO RESTART", width/2 - 250, height/2 + 100);
   }
+
   if (this.pacman.x > width) {
     background(255);
     textSize(80);
     fill(0);
     text("YOU WIN!", width/2 - 150, height/2);
   }
+
   if (this.pacman.y < 0 && this.pacman.x > width/2) {
     background(255);
     textSize(80);
     fill(0);
     text("YOU WIN!", width/2 - 150, height/2);
   }
+
   if (this.pacman.y > height && this.pacman.x > width/2) {
     background(255);
     textSize(80);
     fill(0);
     text("YOU WIN!", width/2 - 150, height/2);
   }
+  
+};
 
-}
-
-function keyPressed(){
-  if (keyCode === ENTER) {
-    if (this.pacman.isHeld == 1) {
-      this.pacman.direction = 0;
-      this.pacman.move(this.pacman.direction);
-      this.pacman.isHeld = 0;
-    }
-  }
-  if (keyCode === UP_ARROW) {
-    this.player.y -= 32;
-  }
-  if (keyCode === DOWN_ARROW) {
-    this.player.y += 32;
-  }
-}
 
 }

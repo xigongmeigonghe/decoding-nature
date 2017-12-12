@@ -2,13 +2,16 @@
 // Daniel Shiffman
 // http://natureofcode.com
 
-function Mover() {
+function BugMover() {
   this.position = createVector(width/5,height/5);
   this.velocity = createVector();
   this.acceleration = createVector();
   this.topspeed = 5;
   this.mass = 1;
-  
+  this.angle = 0;
+  this.aVelocity = 0.;
+  this.sineWaveSign =1;
+  this.whichPic = false;
 
   this.applyForce = function(force) {
     var f = p5.Vector.div(force, this.mass);
@@ -20,28 +23,41 @@ function Mover() {
     this.velocity.add(this.acceleration);
     this.velocity.limit(this.topspeed);
     this.position.add(this.velocity);
-    print(this.velocity)
+    //print(this.velocity)
   };
 
 
   this.display = function() {
     var amplitude = 200; //creates angle and oscillation for wings and colors
-    angle += aVelocity;
-    // aVelocity = map(sin(frameCount*.005), -1,1,.02,.6);
-    //aVelocity = map(mouseX, 0,width,.02,.6);
-    aVelocity = map(this.velocity.y, 5,-5,.02,.6);
+    this.angle += this.aVelocity;
+    this.aVelocity = map(this.velocity.y, 5,-5,.02,.6);
+
+    // var s = sin(this.angle);
+
+    // if (Math.sign(s)!=this.sineWaveSign){
+    //   //then switch picture
+    //   this.whichPic = !this.whichPic;
+    // }
+    // this.sineWaveSign = Math.sign(s);
+
+
     push();
     translate(this.position.x, this.position.y);
- 
+    //imageMode(CENTER);
+    //if (whichPic){
+      //image(img0,0,0);
+    //} else {
+      //image(img1,0,0);
+   // }
 
     push(); //draws wings
-    rotate(sin(angle));
+    rotate(sin(this.angle));
     fill(0);
     noStroke();
     rect(0, 0, 100, 3.5);
     pop();
     push();
-    rotate(sin(-angle));
+    rotate(sin(-this.angle));
     fill(0);
     noStroke();
     rect(0, 0, -100, 3.5);
@@ -55,7 +71,7 @@ function Mover() {
     rectMode(CENTER);
     rect(0,0,18,y);
     pop();
-  
+
 
     push(); //draws antennas and eyes
     stroke(0);

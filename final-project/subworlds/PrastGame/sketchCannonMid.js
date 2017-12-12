@@ -1,16 +1,16 @@
-var shot=false;
-var bounceAngle;
-var angleChange=.1;
-var angleChangevalue=.01;
-var count=0;
-var grav=.01;
 
-var angleBarraell=-(3.14)/7;
+
+
+var RobertGame = function(){
+
+
 var ps;
+var count=0;
+var bounceAngle;
 var cannonBar,target,cannonBase, castle, flame;
 var lastCopyI=0;
 //flocking vars
-var flock; 
+var flock;
 var flick2;
 var drawFlock=false;
 var drawFlockOnce=true;
@@ -22,32 +22,28 @@ var path;
 
 //var castle hp
 var castleHP=0;
-var hit=false;
 
-//power level cannon
-var powerIncrease= 0;
 
 //bacground
-var backgroundImages=[];	
+var backgroundImages=[];
 var bgImageCount=0;
 var bgImageScroll=0;
 
-
-var gameFinished=false;
-
-function preload(){
-	base=loadImage("cannonBaseMid.png");
-	bar=loadImage("cannonBarMid.png");
-	target=loadImage("castle2.png");
-	castle=loadImage("castle2.png");
-	bg=loadImage("bg.jpg")
-	flame= loadImage("flame.png");
-	rock= loadImage("rock.png");
+ this.gameFinished=false;
+ this.preload =function(){
+	// base=loadImage("cannonBaseMid.png");
+	// bar=loadImage("cannonBarMid.png");
+	// target=loadImage("castle2.png");
+	// castle=loadImage("castle2.png");
+	// bg=loadImage("bg.jpg")
+	// flame= loadImage("flame.png");
+	// rock= loadImage("rock.png");
 }
 
-function setup()  {
+this.setup = function()  {
 	newPath();
-	
+  console.log("ender robert's game now")
+
 	createCanvas(window.innerWidth, window.innerHeight);
 	ps = new ParticleSystem(createVector(0,0));
 	p = new Cannon();
@@ -55,7 +51,7 @@ function setup()  {
 	p.cannonSetup();
     flock = new Flock();
     for(var i=0;i<3;i++){
-    	backgroundImages.push(bg);
+    backgroundImages.push(bg);
     }
 
 
@@ -69,12 +65,12 @@ function setup()  {
 
 }
 
-function draw(){run();}
+function draw(){this.run();}
 
-function run() {
+this.run = function(){
 	//path.display();
 	//background(bg);
-	print(gameFinished)
+	print(this.gameFinished)
 	if(!drawFlock){
 	push();
 	fill(255);
@@ -100,23 +96,26 @@ function run() {
 	p.cannonSetup();
 	p.barralSetup();
 	image(castle,-240, height/2-110, 400, 200);
-	
-	
-	
+
+
+
 	//image(castle,-100, height/2-100, 400, 200);
 	//health bar
 	if(drawTarget==true){
-	image(target, 900, height/2-80, 200,100);
-	filter(GRAY);
+	push()
+	rectMode(CORNER)
+	image(target, 900, height/2-120, 220,165);
+	pop()
+	//filter(GRAY);
 	push();
 	fill(255,0,0);
-	rect(950, height/2+80, 100, 10);
+	rect(950, height/2+100, 100, 10);
 	pop();
 
 
 	push();
 	fill(255);
-	rect(950, height/2+80,100-castleHP,10);
+	rect(950, height/2+100,100-castleHP,10);
 	pop();
 	}
 	else{
@@ -124,12 +123,12 @@ function run() {
 		translate(900,height/2-80)
 		image(rock, 0-50,0+50, 150,75)
 		pop();
-		filter(GRAY)
+		//filter(GRAY)
 
 		if(flock.boids[25].position.x>1340){
-			gameFinished=true
+			this.gameFinished=true
 		}
-		
+
 	}
 
 	//cannon power
@@ -138,7 +137,7 @@ function run() {
 	rect(10, height/2+100, 100, 10);
 	pop();
 
-	powerIncrease=powerIncrease+5;
+	powerIncrease=powerIncrease+2;
 	if(powerIncrease==100){
 		powerIncrease=0;
 	}
@@ -146,13 +145,13 @@ function run() {
 	fill(0,255,0);
 	rect(10, height/2+100, powerIncrease, 10);
 	pop();
-	
-	
+
+
 
 	var gravityVector=createVector(0,grav);
 	//var gravity = createVector(.001*cos(random(0,180)), -0.1*sin(random(0,180)));
 	ps.applyForce(grav);
-	
+
 
 	if(shot){
 		var dragForce=p.calculateDrag(.0003)
@@ -162,7 +161,7 @@ function run() {
 		p.applyForce(ag);
 		p.update();
 
-		if(p.cannonBallLocaiton.x<100){	
+		if(p.cannonBallLocaiton.x<100){
 
 		push();
 		translate(35+50,height/2-60);
@@ -184,8 +183,8 @@ function run() {
 		angleChange=angleChange-angleChangevalue;
 		p.applyForce(frc);
 	}
-	
-	if(p.cannonBallLocaiton.x>900-35 && p.cannonBallLocaiton.x<1100-35 && p.cannonBallLocaiton.y>height/2-50-10 && hit ==false){
+
+	if(p.cannonBallLocaiton.x>900-35 && p.cannonBallLocaiton.x<1120+35 && p.cannonBallLocaiton.y>height/2-120 && hit ==false){
 		castleHP=castleHP+25;
 		hit=true;
 		shot=false;
@@ -209,7 +208,7 @@ function run() {
 /*	if((!drawFlock && p.cannonBallLocaiton.x < 425) || angleBarraell != -0.6448214285714285){
 	p.display();
 	}
-	
+
 	if(!drawFlock && p.cannonBallLocaiton.x>800){
 		flock.run();
 	}*/
@@ -232,9 +231,9 @@ function newPath() {
   // A path is a series of connected points
   // A more sophisticated path might be a curve
   path = new Path();
-  
+
   path.addPoint(950,150);
-  
+
   //M
   path.addPoint(952,300)
   path.addPoint(1050,150);
@@ -245,14 +244,17 @@ function newPath() {
 
 }
 
+}
+
 function keyPressed() {
+	print("HERE")
 	if (keyCode === 13 && shot==false) {
 		var forceVector=createVector(map(powerIncrease,0,100,4,20)*cos(angleBarraell),map(powerIncrease,0,100,3,15)*sin(angleBarraell));
 		p.applyForce(forceVector);
 		shot=true;
 		grav=.08;
 		hit=false;
-	} 
+	}
 	if(keyCode == UP_ARROW){
 		angleBarraell=angleBarraell -(3.14)/48;
 		angleBarraell=constrain(angleBarraell,-.6,-.2);
@@ -263,9 +265,6 @@ function keyPressed() {
 	}
 
 }
-
-
-
 
 
 
@@ -294,7 +293,7 @@ class Cannon {
 		rectMode(CORNER);
 		fill(0);
 		//image(base,this.cannonLocation.x-50,this.cannonLocation.y-100,120,150);
-		filter(GRAY)
+		//filter(GRAY)
 		pop();
 	}
 	cannonSetup(){
@@ -356,12 +355,10 @@ class Cannon {
 			var speed = this.cannonBallVelocity.mag();
 			var Magnitude = c * speed ;
 			var Force = this.cannonBallVelocity.copy();
-			
+
 			Force.normalize();
 			Force.mult(Magnitude);
 			return Force;
 
 		}
 	}
-
-
