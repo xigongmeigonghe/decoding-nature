@@ -1,4 +1,4 @@
-class maze3D {
+class PeterGame {
   constructor() {
     this.camera;
     this.scene;
@@ -72,6 +72,9 @@ class maze3D {
     this.prevTime = performance.now();
     this.velocity = new THREE.Vector3();
     this.direction = new THREE.Vector3();
+
+    this.isGameOver = false;
+    this.isDead = false;
   }
 
   setup() {
@@ -166,7 +169,7 @@ class maze3D {
     this.renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( this.renderer.domElement );
 
-    window.addEventListener( 'resize', onWindowResize, false );
+    window.addEventListener( 'resize', this.onWindowResize, false );
 
   }
 
@@ -177,41 +180,48 @@ class maze3D {
   }
 
   run() {
-    requestAnimationFrame( this.run );
+    requestAnimationFrame( animate );
 
     if ( controlsEnabled === true ) {
-      this.raycaster.ray.origin.copy( controls.getObject().position );
 
       let time = performance.now();
       let delta = ( time - prevTime ) / 1000;
 
-      this.velocity.x -= this.velocity.x * 10.0 * delta;
-      this.velocity.y -= this.velocity.y * 10.0 * delta;
-      this.velocity.z -= this.velocity.z * 10.0 * delta;
+      velocity.x -= velocity.x * 10.0 * delta;
+      velocity.y -= velocity.y * 10.0 * delta;
+      velocity.z -= velocity.z * 10.0 * delta;
 
-      this.direction.x = Number( this.moveLeft )    - Number( this.moveRight );
-      this.direction.y = Number( this.moveDown )    - Number( this.moveUp );
-      this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
-      this.direction.normalize(); // this ensures consistent movements in all directions
+      direction.x = Number( moveLeft )    - Number( moveRight );
+      direction.y = Number( moveDown )    - Number( moveUp );
+      direction.z = Number( moveForward ) - Number( moveBackward );
+      direction.normalize(); // this ensures consistent movements in all directions
 
-      if ( this.moveForward || this.moveBackward ) {
-        this.velocity.z -= this.direction.z * 400.0 * delta;
+      if ( moveForward || moveBackward ) {
+        velocity.z -= direction.z * 200.0 * delta;
       }
-      if ( this.moveLeft || this.moveRight ) {
-        this.velocity.x -= this.direction.x * 400.0 * delta;
+      if ( moveLeft || moveRight ) {
+        velocity.x -= direction.x * 200.0 * delta;
       }
-      if ( this.moveUp || this.moveDown ) {
-        this.velocity.y -= this.direction.y * 400.0 * delta;
+      if ( moveUp || moveDown ) {
+        velocity.y -= direction.y * 200.0 * delta;
       }
 
-      this.controls.getObject().translateX( this.velocity.x * delta );
-      this.controls.getObject().translateY( this.velocity.y * delta );
-      this.controls.getObject().translateZ( this.velocity.z * delta );
+      controls.getObject().translateX( velocity.x * delta );
+      controls.getObject().translateY( velocity.y * delta );
+      controls.getObject().translateZ( velocity.z * delta );
 
-      this.prevTime = time;
+      for ( let i = 0; i < starFields.length; i++ ) {
+        this.isDead = starFields[i].processPlayerDistance( controls.getObject() );
+        if ( this.isDead ) console.log("HIT!!!!");
+      }
+
+      isGameOver = target.isGameOver( controls.getObject() );
+      // console.log(isGameOver);
+
+      prevTime = time;
 
     }
-    this.renderer.render( scene, camera );
+    renderer.render( scene, camera );
   }
 
 }

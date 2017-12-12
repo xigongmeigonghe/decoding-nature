@@ -7,9 +7,14 @@ class World {
     this.displayImage = loadImage(_displayImage);
     this.imageHeight = _height;
     this.letter = _letter;
+    this.isWinner = false; // Used for final world
   }
 
   display() {
+    if (this.isWinner) {
+      this.textBox.message = "Winner, winner! You've collected all\nthe clues!\nPassword collected: WELCOME";
+    }
+
     imageMode(CORNER);
     image(this.displayImage,
       this.position.x,

@@ -8,12 +8,12 @@ class Mover {
 
     this.displayImage = loadImage(_displayImage);
     this.running = [this.run1,this.run2,this.run3,this.run4,this.run2,this.run3,this.run2];
-    this.position = createVector(30, _worldHeight);
+    this.position = createVector(30, _worldHeight); // start: 30
     this.velocity = createVector(0, 0);
     this.acceleration = createVector(0, 0);
     this.x = 0;
-    this.imageHeight = 90;
-    this.imageWidth = 60;
+    this.imageHeight = 120;
+    this.imageWidth = 80;
     this.a = true;
 
     console.log(_worldHeight);
