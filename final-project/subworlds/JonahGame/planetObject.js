@@ -10,7 +10,7 @@ var JonahPlanetObject = function () {
 
     _initialiseProps.call(this);
 
-    this.planet = planet, this.maxVelocity = maxVelocity || 5;
+    this.planet = planet, this.maxVelocity = maxVelocity || 6;
     this.pos = pos || planet.randomSurfacePos();
     this.nextPos = new THREE.Vector3();
     this.velocity = vel || this.getNewVelocity();

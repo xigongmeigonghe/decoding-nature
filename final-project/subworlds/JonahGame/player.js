@@ -21,13 +21,14 @@ var JonahPlayer = function (_JonahPlanetObject) {
     _this.run = function () {
       _this.checkKeys();
       _get(JonahPlayer.prototype.__proto__ || Object.getPrototypeOf(JonahPlayer.prototype), "run", _this).call(_this);
+      _this.velocity.clampLength(2, 6);
       _this.raycaster.set(_this.pos, _this.pos.clone().negate().normalize());
       var intersection = _this.raycaster.intersectObject(_this.planet.displayObject)[0];
       if (intersection) {
         var surfaceNormal = intersection.face.normal;
         var len = intersection.point.length();
         _this.displayObject.position.copy(intersection.point).setLength(len + 25);
-        _this.displayObject.lookAt(new THREE.Vector3());
+        //this.displayObject.lookAt(new THREE.Vector3());
         //this.displayObject.lookAt(this.displayObject.position.clone().sub(surfaceNormal));
       }
     };

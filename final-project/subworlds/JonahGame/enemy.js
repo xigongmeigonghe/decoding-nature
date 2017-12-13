@@ -27,7 +27,8 @@ var JonahEnemy = function (_JonahPlanetObject) {
     _this.run = function () {
 
       if (_this.pos.distanceTo(_this.target.pos) < 10) {
-        _this.gameState.userHasLost = true;
+        _this.gameState.lives -= 1;
+        if (_this.gameState.lives === 0) _this.gameState.userHasLost = true;
         _this.pos = _this.planet.randomSurfacePos();
         _this.velocity = _this.getNewVelocity();
         _this.velocity.setLength(_this.maxVelocity);
@@ -76,7 +77,7 @@ var JonahEnemyGenerator = function JonahEnemyGenerator(gameState, scene, planet,
   };
 
   this.createEnemy = function () {
-    var enemy = new JonahEnemy(_this2.gameState, _this2.target, _this2.scene, _this2.planet, _this2.planet.randomSurfacePos(), false, 4);
+    var enemy = new JonahEnemy(_this2.gameState, _this2.target, _this2.scene, _this2.planet, _this2.planet.randomSurfacePos(), false, 3);
     if (_this2.enemies.length < _this2.maxEnemies) {
       _this2.enemies.push(enemy);
     }
@@ -89,6 +90,6 @@ var JonahEnemyGenerator = function JonahEnemyGenerator(gameState, scene, planet,
   this.target = target;
   this.position = planet.randomSurfacePos();
   this.frequency = 10;
-  this.maxEnemies = 30;
+  this.maxEnemies = 60;
   this.enemies = [];
 };

@@ -8,7 +8,8 @@ class JonahEnemy extends JonahPlanetObject{
   run = () => {
 
     if (this.pos.distanceTo(this.target.pos) < 10) {
-      this.gameState.userHasLost = true
+      this.gameState.lives-=1;
+      if (this.gameState.lives === 0)this.gameState.userHasLost = true
       this.pos = this.planet.randomSurfacePos();
       this.velocity = this.getNewVelocity();
       this.velocity.setLength(this.maxVelocity);
@@ -41,7 +42,7 @@ class JonahEnemyGenerator {
     this.target = target;
     this.position = planet.randomSurfacePos();
     this.frequency = 10;
-    this.maxEnemies = 30;
+    this.maxEnemies = 60;
     this.enemies = [];
   }
   run = () => {
@@ -51,7 +52,7 @@ class JonahEnemyGenerator {
     this.enemies.forEach(enemy => enemy.run());
   }
   createEnemy = () => {
-    const enemy = new JonahEnemy(this.gameState, this.target, this.scene, this.planet, this.planet.randomSurfacePos(), false, 4)
+    const enemy = new JonahEnemy(this.gameState, this.target, this.scene, this.planet, this.planet.randomSurfacePos(), false, 3)
     if (this.enemies.length < this.maxEnemies) {
       this.enemies.push(enemy);
     }

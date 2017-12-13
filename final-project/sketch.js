@@ -80,17 +80,12 @@ function preload(){
   ghostImg = loadImage("subworlds/yufeiGame/ghost.png");
   foodImg = loadImage("subworlds/yufeiGame/cell.png");
   boomImg = loadImage("subworlds/yufeiGame/boom.png");
-<<<<<<< HEAD
   LuizeImageUp = loadImage("subworlds/LuizeGame/data/dragonFlyUp.png");
   LuizeImageDown = loadImage("subworlds/LuizeGame/data/dragonFlyDown.png");
   GoldCoin = loadImage("subworlds/LuizeGame/data/strawberry3.png");
   Devil = loadImage("subworlds/LuizeGame/data/beewasp.png");
   XiuaiCuteImage = loadImage("subworlds/XiuaiGame/niao.png");
   shu = loadImage('subworlds/XiuaiGame/shu.jpg');
-
-
-=======
->>>>>>> 80e3c69fc20a60f9244da9e8b598449c8b269219
 }
 
 
@@ -280,8 +275,8 @@ function draw() {
 
 function keyPressed() {
   if (key == 'a' || key == 'A') aPressed = true;
-  // RobertWorld.game.keyPressed(keyCode);
-  // YufeiWorld.game.keyPressed(keyCode);
+  RobertWorld.game.keyPressed(keyCode);
+  YufeiWorld.game.keyPressed(keyCode);
   XiuaiWorld.game.keyPressed(keyCode);
 }
 

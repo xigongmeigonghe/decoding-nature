@@ -41,27 +41,19 @@ var JonahGame = function() {
 	var enemyGenerator;
 
   var scoreEl;
-  var scoreLabelEl;
 
 	var gameState = {
 		playerHasLost: false,
 		startTime: new Date(),
 		frameCount: 0,
-    lives: 1,
 	}
 
   this.setup = function() {
-
     var p5_canvas = document.getElementById("defaultCanvas0");
     p5_canvas.parentNode.removeChild(p5_canvas);
-
     scoreEl = document.createElement("div");
     scoreEl.id = "jonah-score";
-    scoreEl.textContent = "30";
-
-    scoreLabelEl = document.createElement("div");
-    scoreLabelEl.id = "jonah-score-label";
-    scoreLabelEl.textContent = "seconds remaining";
+    scoreEl.textContent = "5";
 
 
 		scene = new THREE.Scene();
@@ -71,8 +63,8 @@ var JonahGame = function() {
 		renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.domElement.className = "three-canvas";
 
+
     document.body.appendChild(scoreEl);
-    document.body.appendChild(scoreLabelEl);
 		document.body.appendChild( renderer.domElement );
 
     light = new THREE.DirectionalLight( 0xffffdd, 2 );
@@ -92,7 +84,6 @@ var JonahGame = function() {
 		gameState.userHasLost = false;
 		gameState.startTime = new Date();
 		gameState.frameCount = 0;
-    gameState.lives = 1;
     scene.add( light );
 		planet = new JonahPlanet(scene,300, new THREE.Vector3());
 		player = new JonahPlayer(scene, planet);
@@ -108,21 +99,20 @@ var JonahGame = function() {
   this.run = function() {
 		if (gameState.userHasLost && !this.isGameOver) this.restart();
     requestAnimationFrame( this.run.bind(this) );
-    if (new Date() - gameState.startTime > 30000 && !this.isGameOver) {
+    if (new Date() - gameState.startTime > 10000 && !this.isGameOver) {
       document.body.removeChild(scoreEl);
-      document.body.removeChild(scoreLabelEl);
       document.body.removeChild(renderer.domElement);
       this.isGameOver = true;
     }
 
     else {
-      const secondsRemaining = 30-((new Date() - gameState.startTime)/1000)
+      const secondsRemaining = 7-((new Date() - gameState.startTime)/1000)
       scoreEl.textContent = secondsRemaining.toFixed(2).toString();
 			gameState.frameCount+=1;
       player.run()
       enemyGenerator.run();
       //player.displayObject.up.copy(player.velocity);
-      //camera.position.copy(player.pos).multiplyScalar(1.3).sub(player.velocity.clone().setLength(100));
+      //camera.position.copy(player.pos).multiplyScalar(1.5).sub(player.velocity.clone().setLength(40));
       camera.position.copy(player.pos).multiplyScalar(1.5)
       light.position.copy(player.pos).multiplyScalar(1.5).sub(player.velocity.clone().setLength(100)).normalize();
       camera.up.copy(player.pos).add(player.velocity)
@@ -131,6 +121,6 @@ var JonahGame = function() {
     renderer.render( scene, camera );
   }
 }
-const game = new JonahGame();
-game.setup();
-game.run();
+// const game = new JonahGame();
+// game.setup();
+// game.run();

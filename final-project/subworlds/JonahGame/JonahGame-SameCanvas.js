@@ -40,11 +40,13 @@ var JonahGame = function() {
 	var enemyGenerator;
 
   var scoreEl;
+  var scoreLabelEl;
 
 	var gameState = {
 		playerHasLost: false,
 		startTime: new Date(),
 		frameCount: 0,
+    lives: 1,
 	}
 
   this.setup = function() {
@@ -52,6 +54,11 @@ var JonahGame = function() {
     scoreEl = document.createElement("div");
     scoreEl.id = "jonah-score";
     scoreEl.textContent = "30";
+
+    scoreLabelEl = document.createElement("div");
+    scoreLabelEl.id = "jonah-score-label";
+    scoreLabelEl.textContent = "seconds remaining";
+
     const canvas = document.getElementsByTagName("canvas")[0];
 		scene = new THREE.Scene();
 		scene.background = new THREE.Color( 0xFFFFFF );
@@ -60,6 +67,7 @@ var JonahGame = function() {
 		renderer.setSize( window.innerWidth, window.innerHeight );
 
     document.body.appendChild(scoreEl);
+    document.body.appendChild(scoreLabelEl);
 
     light = new THREE.DirectionalLight( 0xffffdd, 2 );
     scene.add( light );
@@ -78,6 +86,7 @@ var JonahGame = function() {
 		gameState.userHasLost = false;
 		gameState.startTime = new Date();
 		gameState.frameCount = 0;
+    gameState.lives = 1;
     scene.add( light );
 		planet = new JonahPlanet(scene,300, new THREE.Vector3());
 		player = new JonahPlayer(scene, planet);
@@ -95,6 +104,7 @@ var JonahGame = function() {
     requestAnimationFrame( this.run.bind(this) );
     if (new Date() - gameState.startTime > 30000 && !this.isGameOver) {
       document.body.removeChild(scoreEl);
+      document.body.removeChild(scoreLabelEl);
       this.isGameOver = true;
     }
 

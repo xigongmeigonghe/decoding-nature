@@ -11,13 +11,14 @@ class JonahPlayer extends JonahPlanetObject{
   run = () => {
     this.checkKeys()
     super.run()
+    this.velocity.clampLength(2,6)
     this.raycaster.set(this.pos, this.pos.clone().negate().normalize())
     const intersection = this.raycaster.intersectObject(this.planet.displayObject)[0]
     if (intersection) {
       const surfaceNormal = intersection.face.normal;
       const len = intersection.point.length();
       this.displayObject.position.copy(intersection.point).setLength(len+25);
-      this.displayObject.lookAt(new THREE.Vector3());
+      //this.displayObject.lookAt(new THREE.Vector3());
       //this.displayObject.lookAt(this.displayObject.position.clone().sub(surfaceNormal));
     }
   }
