@@ -1,6 +1,10 @@
 
 
+var XiuaiCuteImage;
+ 
 var XiuaiGame = function() {
+
+  this.gameOver = false;
 
   this.lsys;
   this.turtle;
@@ -14,13 +18,13 @@ var XiuaiGame = function() {
   this.firstRule;
   this.counter = 0;
   this.numQuestion = 0;
-  this.questions = ['my love', 'my love', 'my love', 'my love', 'my love',];
+  this.questions = ['The elongation of root and stem forms what is known as the', 'do you love magic', 'Gas exchange through the bark occurs through', 'would you like to see some magic?', 'Fleshy fruits that are brightly colored are often dispersed by',];
   this.answers = [
-    ['oscar', 'hahaha', 'hahhhah'],
-    ['hahaha', 'oscar', 'hahahha'],
-    ['oscar', 'hahaha', 'hahahah'],
-    [':)', ':)', 'oscar'],
-    ['hahha', ':)', 'grow'],
+    ['primary plant body', 'secondary growth', 'root'],
+    [':)', 'Magic loves me', 'I dont kow magic'],
+    ['lenticles', 'stomata', 'micropyles'],
+    [':)', ':)', 'Yes'],
+    ['water', 'me', 'birds'],
   ];
   this.rightAnswers = [0, 1, 0, 2, 2];
 
@@ -39,6 +43,11 @@ var XiuaiGame = function() {
 // this.isGathis.meOver= false;
 
 
+  this.preload = function(){
+
+    XiuaiCuteImage= loadImage("niao.png")
+    this.shu= loadImage('shu.jpg')
+  } //end of preload
 
   this.keyPressed=function(keyCode){
     print(keyCode);
@@ -49,7 +58,11 @@ var XiuaiGame = function() {
           this.growTree();
           if (this.numQuestion < this.questions.length-1) {
             this.numQuestion++;
+          } else {
+            setTimeout(function(){this.gameOver=true;}.bind(this), 15000);
           }
+
+
           //this.updateAnswers();
         } else {
           //trigger draw lost text
@@ -57,10 +70,50 @@ var XiuaiGame = function() {
           setTimeout(function(){this.wrong = false;}.bind(this), 1000); //reset and start again }, 1000);
         }
     } else if (keyCode==38 && 0<this.numText) {
-      this.numText-=1;
+      this.numText-=1; 
     } else if (keyCode==40 && this.numText<2) {
       this.numText+=1;
     }
+
+    // move down
+
+    // this.cat.mouseClicked(function() {
+    //   if (0 == this.rightAnswers[this.numQuestion]) {
+    //     this.growTree();
+    //     if (this.numQuestion < this.questions.length-1) {
+    //       this.numQuestion++;
+    //     }
+    //     this.updateAnswers();
+    //   } else {
+    //     alert('HAHAHAHA Wrong!');
+    //   }
+    // });
+
+    // this.dog = createButton(this.answers[this.numQuestion][1]);
+    // this.dog.mouseClicked(function() {
+    //   if (1 == this.rightAnswers[this.numQuestion]) {
+    //     growTree();
+    //      if (this.numQuestion < this.questions.length-1) {
+    //       this.numQuestion++;
+    //     }
+    //     updateAnswers();
+    //   } else {
+    //     alert('HAHAHAHA Wrong!');
+    //   }
+    // });
+
+    // this.me = createButton(this.answers[this.numQuestion][2]);
+    // this.me.mouseClicked(function() {
+    //   if (2 == rightAnswers[this.numQuestion]) {
+    //     growTree();
+    //      if (this.numQuestion < this.questions.length-1) {
+    //       this.numQuestion++;
+    //     }
+    //     updateAnswers();
+    //   } else {
+    //     alert('HAHAHAHA Wrong!');
+    //   }
+    // });
   }
 
   this.setup = function() {
@@ -78,7 +131,7 @@ var XiuaiGame = function() {
     this.turtle = new XiuaiTurtle(this.lsys.getSentence(), height*3/5, radians(25), this);
     print(this.lsys.getSentence()+ " first sentance")
     // this.cat = createButton(this.answers[this.numQuestion][0]);
-
+    
 
 
     this.pg = createGraphics(window.innerWidth, window.innerHeight);
@@ -96,14 +149,14 @@ var XiuaiGame = function() {
   this.turtle.render(this.pg);
 
   this.pg.pop();
-     // analyze the pixels once
+     // analyze the pixels once 
 
-
+    
      this.checkPixels();
      this.turtle.init=true;
 
 
-
+   
     this.lsys.sentence="G";
     this.lsys.ruleset[0] = this.firstRule;
     this.turtle.setToDo(this.lsys.getSentence());
@@ -124,7 +177,7 @@ var XiuaiGame = function() {
   //   background(51);
    noFill();
    stroke(255);
-
+    
 
     // text('q1','q2', 'q3', 'q4', 'q5');
     push();
@@ -133,7 +186,7 @@ var XiuaiGame = function() {
 
     this.turtle.render();
 
-
+    
     pop();
 
   //   //do here
@@ -177,8 +230,10 @@ var XiuaiGame = function() {
 
 
       this.turtle.birds[i].display();
-
+    
     }
+
+
   }
   // image(this.pg,0,0);
 
@@ -201,7 +256,7 @@ var XiuaiGame = function() {
 
   this.checkPixels=function(){
     console.log("Checking Pixels")
-
+   
     print(this.turtle.locations.length+ " initial length")
     if(this.turtle.madeBirds){
       this.pg.loadPixels();
@@ -209,7 +264,7 @@ var XiuaiGame = function() {
       for (var y=0;y<this.pg.height;y++){
         for (var x=0;x<this.pg.width;x++){
             // console.log("Looping through width and height")
-
+            
             index++;
           var loc = (x+y*width)*4;
           var col = this.pg.pixels[loc];
@@ -220,7 +275,7 @@ var XiuaiGame = function() {
             // console.log("UPDATING LOthis.catIONS")
             var pos = createVector(x,y);
             this.turtle.locations.push(pos);
-
+            
 
           }
         }
@@ -262,7 +317,7 @@ var XiuaiGame = function() {
       this.turtle.changeLen(0.5);
       this.pg.pop();
       pop();
-
+      
       this.counter ++;
     }
   } //end of grow tree

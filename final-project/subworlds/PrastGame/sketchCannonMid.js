@@ -27,7 +27,7 @@ var backgroundImages=[];
 var bgImageCount=0;
 var bgImageScroll=0;
 
- this.gameFinished=false;
+ this.isGameOver=false;
 
 
 this.setup = function()  {
@@ -57,9 +57,10 @@ this.setup = function()  {
 function draw(){this.run();}
 
 this.run = function(){
+	imageMode(CORNER)
 	//path.display();
 	//background(bg);
-	print(this.gameFinished)
+	print(this.isGameOver)
 	if(!drawFlock){
 	push();
 	fill(255);
@@ -75,7 +76,7 @@ this.run = function(){
 	if(drawFlock){
 		image(backgroundImages[lastCopyI],bgImageScroll+width*i,0,width,height/2);
 	}
-	if(drawFlock && (flock.boids[1].position.x < 950 || flock.boids[1].position.x > 1330)){
+	if(drawFlock && (flock.boids[1].position.x < 850 || flock.boids[1].position.x > 1330)){
 	push();
 	fill(255);
 	image(bg,0,0,width,height/2);
@@ -109,13 +110,13 @@ this.run = function(){
 	}
 	else{
 		push()
-		translate(900,height/2-80)
+		translate(800,height/2-80)
 		image(rock, 0-50,0+50, 150,75)
 		pop();
 		//filter(GRAY)
 
-		if(flock.boids[25].position.x>1340){
-			this.gameFinished=true
+		if(flock.boids[25].position.x>1230){
+			this.isGameOver=true
 		}
 
 	}
@@ -183,7 +184,7 @@ this.run = function(){
 	if(castleHP==100 && drawFlockOnce){
 	drawFlockOnce=false;
 		for (var i = 0; i < 30; i++) {
-			var b = new Boid(900, height/2+20);
+			var b = new Boid(800, height/2+20);
 			flock.addBoid(b);
 
 		}
@@ -221,15 +222,15 @@ function newPath() {
   // A more sophisticated path might be a curve
   path = new Path();
 
-  path.addPoint(950,150);
+  path.addPoint(850,150);
 
   //M
-  path.addPoint(952,300)
-  path.addPoint(1050,150);
-  path.addPoint(1150,300);
-  path.addPoint(1250,150);
-  path.addPoint(1330,300);
-  path.addPoint(1437,height/2);
+  path.addPoint(852,300)
+  path.addPoint(950,150);
+  path.addPoint(1050,300);
+  path.addPoint(1150,150);
+  path.addPoint(1230,300);
+
 
 }
 

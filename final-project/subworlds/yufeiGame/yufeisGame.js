@@ -19,7 +19,8 @@
  *    "Compress <FolderName>".
  *
  ******************************************************************************/
-
+var yufeiStartOver =false;
+var yufeiReset=false;
 
 var YufeisGame = function() {
   // Variables for Pong
@@ -53,6 +54,7 @@ var YufeisGame = function() {
    * screen dimensions.
    */
   this.setup = function() {
+    print("inside setup");
     // Leave the canvas as this size unless absolutely necessary
     // var canvas = createCanvas(1280,701);
     var p5_canvas = document.getElementById("defaultCanvas0");
@@ -91,7 +93,8 @@ var YufeisGame = function() {
     this.player = new Player();
     this.computer = new Computer(this.pacman);
     frameRate(10);
-  }
+    yufeiStartOver=false;
+  };
 
   /*
    * This method is called once for every frame. Do any logic required for the
@@ -204,6 +207,11 @@ var YufeisGame = function() {
  //    }
  //    setTimeout(this.activateGhosts,7000);
  //  }
+ this.startOver = function(){
+  print("starting over")
+    yufeiReset=true;
+    
+ }
 
 this.showWinner = function() {
   if (this.chances === 0) {
@@ -212,9 +220,10 @@ this.showWinner = function() {
     fill(0);
     text("YOU LOSE", width/2 - 150, height/2);
     textSize(48);
-    text("PRESS B TO RESTART", width/2 - 250, height/2 + 100);
+    
+    // text("PRESS B TO RESTART", width/2 - 250, height/2 + 100);
   }
-
+  
   if (this.player.points > 60) {
     text("YOU WIN!", 20, 80);
     fill(255, 0, 0);
@@ -241,8 +250,11 @@ this.showWinner = function() {
     textSize(80);
     fill(0);
     text("YOU LOSE", width/2 - 150, height/2);
-    textSize(48);
-    text("PRESS B TO RESTART", width/2 - 250, height/2 + 100);
+    if(!yufeiStartOver){
+      yufeiStartOver=true;
+      print("first")
+      setTimeout(this.startOver, 3000);
+    }
   }
 
   if (this.ghost1.collision(this.pacman) || this.ghost2.collision(this.pacman)) {
@@ -263,7 +275,12 @@ this.showWinner = function() {
     fill(0);
     text("YOU LOSE", width/2 - 150, height/2);
     textSize(48);
-    text("PRESS B TO RESTART", width/2 - 250, height/2 + 100);
+    if(!yufeiStartOver){
+      print("second")
+      yufeiStartOver=true;
+      setTimeout(this.startOver, 3000);
+    }
+    //text("PRESS B TO RESTART", width/2 - 250, height/2 + 100);
   }
 
   if (this.pacman.y > height && this.pacman.x < width/2) {
@@ -271,8 +288,11 @@ this.showWinner = function() {
     textSize(80);
     fill(0);
     text("YOU LOSE", width/2 - 150, height/2);
-    textSize(48);
-    text("PRESS B TO RESTART", width/2 - 250, height/2 + 100);
+    if(!yufeiStartOver){
+      print("third")
+      yufeiStartOver=true;
+      setTimeout(this.startOver, 3000);
+    }
   }
 
   if (this.pacman.x > width) {
@@ -295,7 +315,10 @@ this.showWinner = function() {
     fill(0);
     text("YOU WIN!", width/2 - 150, height/2);
   }
-
+  if(yufeiReset==true){
+    this.setup();
+    yufeiReset=false;
+  }
 };
 
 
@@ -308,11 +331,11 @@ this.keyPressed = function(keyCode){
       this.pacman.isHeld = 0;
     }
   }
-  if (keyCode === SHIFT) {
-    this.setup();
-    this.run();
-    // window.location.reload();
-  }
+  // if (keyCode === SHIFT) {
+  //   this.setup();
+  //   this.run();
+  //   // window.location.reload();
+  // }
   if (keyCode === UP_ARROW) {
     this.player.y -= this.brickSize;
   }
