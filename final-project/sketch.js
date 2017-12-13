@@ -35,8 +35,36 @@ var hit=false;
 
 //Luize's
 var luizesCrazyGlobalVariableHAHAHAHA_butreally_gameLose= false;
+var LuizeImageUp;
+var LuizeImageDown;
+var GoldCoin;
+var Devil;
+var LuizeGameOver = false;
 
+// Preload Variable
+var base;
+var bar;
+var target;
+var castle;
+var bg;
+var flame;
+var rock;
+var pacmanImg;
+var ghostImg;
+var foodImg;
+var boomImg;
+var runOnce = true;
 
+var peterMoveForward;
+var peterMoveBackwards;
+var peterMoveLeft;
+var peterMoveRight;
+var peterMoveUp;
+var peterMoveDown;
+var peterStarFields = [];
+
+var XiuaiCuteImage;
+var shu;
 
 function preload(){
   base=loadImage("subworlds/PrastGame/cannonBaseMid.png");
@@ -50,6 +78,12 @@ function preload(){
   ghostImg = loadImage("subworlds/yufeiGame/ghost.png");
   foodImg = loadImage("subworlds/yufeiGame/cell.png");
   boomImg = loadImage("subworlds/yufeiGame/boom.png");
+  LuizeImageUp = loadImage("subworlds/LuizeGame/data/dragonFlyUp.png");
+  LuizeImageDown = loadImage("subworlds/LuizeGame/data/dragonFlyDown.png");
+  GoldCoin = loadImage("subworlds/LuizeGame/data/strawberry3.png");
+  Devil = loadImage("subworlds/LuizeGame/data/beewasp.png");
+  XiuaiCuteImage = loadImage("subworlds/XiuaiGame/niao.png");
+  shu = loadImage('subworlds/XiuaiGame/shu.jpg');
 
 
 }
@@ -68,7 +102,8 @@ function setup() {
   bug = loadImage("media/bug.png");
 
 
-  m = new Mover("media/run1K.png", "media/run2K.png", "media/run3K.png", "media/run4K.png", "media/run2K.png", WORLD_HEIGHT);
+  m = new Mover("media/run1K.png", "media/run2K.png",
+  "media/run3K.png", "media/run4K.png", "media/run2K.png", WORLD_HEIGHT);
 
   /* Set up the serial port */
   serial = new p5.SerialPort();       // make a new instance of the serialport library
@@ -85,29 +120,30 @@ function setup() {
   /* Set up the world entrypoints in the main world */
 
   StartHome = new World(100, WORLD_HEIGHT, 600, 500,
-     "Locked out of your own home! \nGo explore the world to try to\nremember your password!", new Game(), "media/house.png");
+     "Locked out of your own home! \nGo explore the world to try to\nremember your password!",
+      new Game(), "media/house.png",false);
 
   JonahWorld = new World(1290, WORLD_HEIGHT, 100, 50,
     "What hints can you find in the atomic\nworld? Press 'A' to Enter!",
-    new Game(), "media/table.png");
+    new JonahGame(), "media/table.png",true);
   YufeiWorld = new World(1900, WORLD_HEIGHT, 100,50,
     "The atomic world helped, but now its\ntime to think a little bigger.\nPress 'A' to Enter!",
-    new YufeisGame(), "media/table.png");
+    new YufeisGame(), "media/table.png",false);
   LuizeWorld = new World(2900, WORLD_HEIGHT, 100, 50,
     "Maybe putting multiple cells together\nwill lead you to another clue!\nPress 'A' to Enter!",
-    new LuizeGame(), "media/table.png");
+    new LuizeGame(), "media/table.png",false);
   XiuaiWorld = new World(3900, WORLD_HEIGHT, 400,600,
       "This tree seems like a place you\nwould rest. Maybe you left a clue here.\nPress 'A' to Enter!",
-    new Game(), "media/tree.png");
+    new XiuaiGame(), "media/tree.png",false);
   RobertWorld = new World(4960, WORLD_HEIGHT, 800,600,
       "This castle looks like the perfect place\nto hide a clue! Press 'A' to Enter!",
-    new Game(), "media/castle.png");
+    new RobertGame(), "media/castle.png",false);
   KateWorld = new World(6500, WORLD_HEIGHT, 300,400,
     "You've found all the clues here on Earth,\nbut that isn't enough! Press 'A' to Enter!",
-    new Game(), "media/rocket.png");
+    new Game(), "media/rocket.png",false);
   PeterWorld = new World(7000, WORLD_HEIGHT, 300,200,
       "Looks like you need to travel some more\nto find the final clue! Press 'A' to Enter!",
-    new Game(), "media/blank.png");
+    new PeterGame(), "media/blank.png",true);
 
   EndHome = new World(7400, WORLD_HEIGHT, 600, 500,
      "Home sweet home! You remembered\nyour code, and you have successfully\nmade it back! Congrats!",
@@ -132,12 +168,20 @@ function draw() {
   if (isSubWorldInProgress) { // Update and run the game
     if (firstFrameInSubworld) { // Execute on transition from main world
       console.log(subWorldInProgress)
+      // console.log
       subWorldInProgress.setup();
       firstFrameInSubworld = false;
       window.scrollTo(0, 0);
     }
 
-    subWorldInProgress.run();
+    if (subWorldInProgress.three && runOnce){
+      subWorldInProgress.run();
+      print("yo")
+      runOnce = false;
+    }
+    else if (!subWorldInProgress.three){
+      subWorldInProgress.run();
+    }
 
     if (subWorldInProgress.isGameOver) {
       isSubWorldInProgress = false; // Continue on in the main world
@@ -146,11 +190,17 @@ function draw() {
 
   } else {
     if (firstFrameInMainWorld) { // Execute on transition from subworld
+      // var p5_canvas = document.getElementById("defaultCanvas0");
+      // p5_canvas.parentNode.removeChild(p5_canvas);
+      // context.clearRect(0, 0, canvas.width, canvas.height);
       createCanvas(WORLD_WIDTH, screen.height); // Reset to main world canvas
+      frameRate(60);
       firstFrameInMainWorld = false; // Done with transition
     }
+    runOnce = true;
 
     background(255);
+    rectMode(CORNER);
     fill(0);
     image(microscope,1930,WORLD_HEIGHT-70,40,45);
     image(bug,2920,WORLD_HEIGHT-70,35,40);
@@ -208,6 +258,9 @@ function draw() {
 
 function keyPressed() {
   if (key == 'a' || key == 'A') aPressed = true;
+  // RobertWorld.game.keyPressed(keyCode);
+  // YufeiWorld.game.keyPressed(keyCode);
+  XiuaiWorld.game.keyPressed(keyCode);
 }
 
 function keyReleased() {

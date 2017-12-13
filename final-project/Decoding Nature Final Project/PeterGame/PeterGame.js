@@ -4,6 +4,7 @@ class PeterGame {
     this.scene;
     this.renderer;
     this.controls;
+    this.three = true;
 
     this.starFields = [];
     this.target;

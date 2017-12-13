@@ -1,9 +1,9 @@
 function Pacman(x, y, img) {
   this.x = x;
   this.y = y;
-  this.radius = 16;
+  this.radius = YufeiWorld.game.brickSize/2;
   this.img = img;
-  this.velocity = 32;
+  this.velocity = YufeiWorld.game.brickSize;
   this.direction = 0;
   this.prevDirection;
   this.frame = 0;
@@ -49,7 +49,7 @@ function Pacman(x, y, img) {
   };
 
   this.brickcollision = function(enemy) {
-    
+
     var position = createVector(this.x, this.y);
     var vectorBetween= createVector();
     vectorBetween.x = enemy.x - position.x;
@@ -59,7 +59,7 @@ function Pacman(x, y, img) {
     if (distance < this.radius + enemy.radius * 2) {
           switch(direction) {
         case 0:
-          
+
           if (vectorBetween.x > 0 && enemy.y == position.y) {
             //move up or down
             var r = random(1);
@@ -70,7 +70,7 @@ function Pacman(x, y, img) {
             }
           }
           break;
-        case 1: 
+        case 1:
           if (vectorBetween.y > 0 && enemy.x == position.x) {
             //move right
               direction = 0;
@@ -92,7 +92,7 @@ function Pacman(x, y, img) {
   this.show = function() {
     //ellipse(this.x, this.y, this.radius, this.radius);
     imageMode(CENTER);
-    image(this.img,this.x,this.y, 32, 32);
+    image(this.img,this.x,this.y, YufeiWorld.game.brickSize, YufeiWorld.game.brickSize);
     //fill(0);
   };
 }

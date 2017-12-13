@@ -24,6 +24,7 @@ var JonahGame = function() {
 
   /* Change this.isGameOver to true when the game is complete */
   this.isGameOver= false;
+  this.three = true;
   /*
    * This method is called once when the game is initialized. Set up the canvas here.
    * Remember that the canvas that the game is rendered on is NOT a laptop screen.
@@ -48,10 +49,11 @@ var JonahGame = function() {
 	}
 
   this.setup = function() {
-
+    var p5_canvas = document.getElementById("defaultCanvas0");
+    p5_canvas.parentNode.removeChild(p5_canvas);
     scoreEl = document.createElement("div");
     scoreEl.id = "jonah-score";
-    scoreEl.textContent = "30";
+    scoreEl.textContent = "5";
 
 
 		scene = new THREE.Scene();
@@ -60,6 +62,7 @@ var JonahGame = function() {
 		renderer = new THREE.WebGLRenderer({antialias: true});
 		renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.domElement.className = "three-canvas";
+
 
     document.body.appendChild(scoreEl);
 		document.body.appendChild( renderer.domElement );
@@ -96,14 +99,14 @@ var JonahGame = function() {
   this.run = function() {
 		if (gameState.userHasLost && !this.isGameOver) this.restart();
     requestAnimationFrame( this.run.bind(this) );
-    if (new Date() - gameState.startTime > 30000 && !this.isGameOver) {
+    if (new Date() - gameState.startTime > 10000 && !this.isGameOver) {
       document.body.removeChild(scoreEl);
       document.body.removeChild(renderer.domElement);
       this.isGameOver = true;
     }
 
     else {
-      const secondsRemaining = 30-((new Date() - gameState.startTime)/1000)
+      const secondsRemaining = 7-((new Date() - gameState.startTime)/1000)
       scoreEl.textContent = secondsRemaining.toFixed(2).toString();
 			gameState.frameCount+=1;
       player.run()
@@ -118,6 +121,6 @@ var JonahGame = function() {
     renderer.render( scene, camera );
   }
 }
-const game = new JonahGame();
-game.setup();
-game.run();
+// const game = new JonahGame();
+// game.setup();
+// game.run();

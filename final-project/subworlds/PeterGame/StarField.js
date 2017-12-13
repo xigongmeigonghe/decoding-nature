@@ -3,13 +3,13 @@
 class StarField {
   constructor( scene ) {
     // set a random position
-    // this.position = new THREE.Vector3(
-    //   THREE.Math.randInt( -window.innerWidth/4, window.innerWidth/4 ),
-    //   THREE.Math.randInt( -window.innerHeight/4, window.innerHeight/4 ),
-    //   THREE.Math.randInt( -350, -100 )
-    // );
+    this.position = new THREE.Vector3(
+      THREE.Math.randInt( -window.innerWidth/8, window.innerWidth/8 ),
+      THREE.Math.randInt( -window.innerHeight/8, window.innerHeight/8 ),
+      THREE.Math.randInt( -325, -150 )
+    );
 
-    this.position = new THREE.Vector3( 0, 0, -100 );
+    // this.position = new THREE.Vector3( 0, 0, -200 );
 
     this.width  = THREE.Math.randInt( 10, 100 );
     this.height = THREE.Math.randInt( 10, 100 );
@@ -50,12 +50,14 @@ class StarField {
       if ( distance <= 5 ) {
         return true;
       }
-      else if ( distance < 20 && distance > 5 ) {
+      else if ( distance < 25 && distance > 5 ) {
         this.stars[i].visible = true;
       }
       else {
         this.stars[i].visible = false;
       }
     }
+
+    return false;
   }
 }

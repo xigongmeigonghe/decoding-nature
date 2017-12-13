@@ -23,11 +23,13 @@
 
 var YufeisGame = function() {
   // Variables for Pong
+  this.three = false;
   this.player;
   this.computer;
   this.move = false;
 
   // Variables for Pacman
+  this.brickSize;
   this.brick;
   this.bricks = [];
   this.platformMaze;
@@ -36,7 +38,6 @@ var YufeisGame = function() {
   this.pacman;
   // var pacmanImg;
   this.points;
-  this.chances = 3;
   this.ghost1;
   this.ghost2;
   // var ghostImg;
@@ -44,7 +45,6 @@ var YufeisGame = function() {
   //this.activeGhosts = [];
   /* Change this.isGameOver to true when the game is complete */
   this.isGameOver= false;
-
 
   /*
    * This method is called once when the game is initialized. Set up the canvas here.
@@ -54,26 +54,36 @@ var YufeisGame = function() {
    */
   this.setup = function() {
     // Leave the canvas as this size unless absolutely necessary
-    createCanvas(window.innerWidth, window.innerHeight);
+    // var canvas = createCanvas(1280,701);
+    var p5_canvas = document.getElementById("defaultCanvas0");
+    p5_canvas.parentNode.removeChild(p5_canvas);
+    createCanvas(window.innerWidth,window.innerHeight);
+
+  // Move the canvas so it's inside our <div id="sketch-holder">.
+    // canvas.parent('yufei-center');
+
+    print("width" + width, height);
+    this.brickSize = width / 40;
+
 
     // Put your setup code here
     this.platformMaze = new Platform(21, 25);
 
-    this.pacman = new Pacman(32, 16*22, pacmanImg);
+    this.pacman = new Pacman(this.brickSize, this.brickSize * 11, pacmanImg);
 
     for (var i = 0; i < this.platformMaze.getRows(); i++) {
       for (var j = 0; j < this.platformMaze.getColumns(); j++) {
         if(this.platformMaze.getElement(i, j) === '*') {
-          this.bricks.push(new Brick(j*32 + 32*8, i*32));
+          this.bricks.push(new Brick(j*this.brickSize + this.brickSize*8, i*this.brickSize));
         }
         else if(this.platformMaze.getElement(i, j) === '-') {
-          this.foods.push(new Food(j*32 + 32*8, i*32, foodImg));
+          this.foods.push(new Food(j*this.brickSize + this.brickSize*8, i*this.brickSize, foodImg));
         }
         else if(this.platformMaze.getElement(i, j) === 'g') {
-          this.ghost1 = new Ghost(j*32 + 32*8, i*32, ghostImg);
+          this.ghost1 = new Ghost(j*this.brickSize + this.brickSize*8, i*this.brickSize, ghostImg);
         }
         else if(this.platformMaze.getElement(i, j) === 'h') {
-          this.ghost2 = new Ghost(j*32 + 32*8, i*32, ghostImg);
+          this.ghost2 = new Ghost(j*this.brickSize + this.brickSize*8, i*this.brickSize, ghostImg);
         }
       }
       // this.activateGhosts();
@@ -97,10 +107,13 @@ var YufeisGame = function() {
     fill(0);
     text("Cells killed: " + this.player.points, width - 220, 40);
     text("Kill 60 cells", 20, 40);
+    textSize(20);
+    text("PRESS A TO LAUNCH", 20, 80);
     //text("Life: " + chances, width - 115, 80);
     // Pong
-    this.player.show();
 
+    this.player.show();
+    //
     this.computer.show();
     this.computer.move();
 
@@ -109,7 +122,6 @@ var YufeisGame = function() {
         this.ghost1.direction = this.ghost1.brickCollision(this.bricks[i]);//(pacman.direction + 3) % 4;
     }
     this.ghost1.move(this.ghost1.direction);
-    print(this.ghost1.x, this.ghost1.y);
 
     for(i = 0; i < this.bricks.length; i++){
         this.ghost2.direction = this.ghost2.brickCollision(this.bricks[i]);//(pacman.direction + 3) % 4;
@@ -138,7 +150,7 @@ var YufeisGame = function() {
         this.pacman.isHeld = 1;
       }
     } else {
-      this.pacman.x = 32;
+      this.pacman.x = this.brickSize;
       this.pacman.y = this.player.y;
     }
 
@@ -200,25 +212,28 @@ this.showWinner = function() {
     fill(0);
     text("YOU LOSE", width/2 - 150, height/2);
     textSize(48);
-    text("PRESS SHIFT TO RESTART", width/2 - 250, height/2 + 100);
+    text("PRESS B TO RESTART", width/2 - 250, height/2 + 100);
   }
 
   if (this.player.points > 60) {
     text("YOU WIN!", 20, 80);
     fill(255, 0, 0);
-    rect(32*16, 32*3, 160, 96);
-    rect(32*20, 32*3, 96, 96);
-    rect(32*24, 32*3, 160, 96);
-    rect(32*13, 32*7, 96, 96);
-    rect(32*13, 32*10, 96, 96);
-    rect(32*27, 32*7, 96, 96);
-    rect(32*13, 32*13, 96, 96);
-    rect(32*27, 32*10, 96, 96);
-    rect(32*27, 32*13, 96, 96);
-    rect(32*16, 32*17, 160, 96);
-    rect(32*20, 32*17, 96, 96);
-    rect(32*24, 32*17, 160, 96);
+    rect(this.brickSize*16, this.brickSize*3, this.brickSize*5, this.brickSize*3);
+    rect(this.brickSize*20, this.brickSize*3, this.brickSize*3, this.brickSize*3);
+    rect(this.brickSize*24, this.brickSize*3, this.brickSize*5, this.brickSize*3);
+    rect(this.brickSize*13, this.brickSize*7, this.brickSize*3, this.brickSize*3);
+    rect(this.brickSize*13, this.brickSize*10, this.brickSize*3, this.brickSize*3);
+    rect(this.brickSize*27, this.brickSize*7, this.brickSize*3, this.brickSize*3);
+    rect(this.brickSize*13, this.brickSize*13, this.brickSize*3, this.brickSize*3);
+    rect(this.brickSize*27, this.brickSize*10, this.brickSize*3, this.brickSize*3);
+    rect(this.brickSize*27, this.brickSize*13, this.brickSize*3, this.brickSize*3);
+    rect(this.brickSize*16, this.brickSize*17, this.brickSize*5, this.brickSize*3);
+    rect(this.brickSize*20, this.brickSize*17, this.brickSize*3, this.brickSize*3);
+    rect(this.brickSize*24, this.brickSize*17, this.brickSize*5, this.brickSize*3);
+    // rectMode(CORNER);
+    // imageMode(CORNER);
     this.isGameOver = true;
+  
   }
 
   if (this.pacman.x < 0) {
@@ -227,20 +242,20 @@ this.showWinner = function() {
     fill(0);
     text("YOU LOSE", width/2 - 150, height/2);
     textSize(48);
-    text("PRESS SHIFT TO RESTART", width/2 - 250, height/2 + 100);
+    text("PRESS B TO RESTART", width/2 - 250, height/2 + 100);
   }
 
-  if (this.ghost1.collision(this.pacman)) {
+  if (this.ghost1.collision(this.pacman) || this.ghost2.collision(this.pacman)) {
     background(255);
     imageMode(CENTER);
     image(boomImg,width/2,height/2);
   }
 
-  if (this.ghost2.collision(this.pacman)) {
-    background(255);
-    imageMode(CENTER);
-    image(boomImg,width/2,height/2);
-  }
+  // if (this.ghost2.collision(this.pacman)) {
+  //   background(255);
+  //   imageMode(CENTER);
+  //   image(this.boomImg,width/2,height/2);
+  // }
 
   if (this.pacman.y < 0 && this.pacman.x < width/2) {
     background(255);
@@ -248,7 +263,7 @@ this.showWinner = function() {
     fill(0);
     text("YOU LOSE", width/2 - 150, height/2);
     textSize(48);
-    text("PRESS SHIFT TO RESTART", width/2 - 250, height/2 + 100);
+    text("PRESS B TO RESTART", width/2 - 250, height/2 + 100);
   }
 
   if (this.pacman.y > height && this.pacman.x < width/2) {
@@ -257,7 +272,7 @@ this.showWinner = function() {
     fill(0);
     text("YOU LOSE", width/2 - 150, height/2);
     textSize(48);
-    text("PRESS SHIFT TO RESTART", width/2 - 250, height/2 + 100);
+    text("PRESS B TO RESTART", width/2 - 250, height/2 + 100);
   }
 
   if (this.pacman.x > width) {
@@ -282,6 +297,30 @@ this.showWinner = function() {
   }
 
 };
+
+
+
+this.keyPressed = function(keyCode){
+  if (keyCode === 65) {
+    if (this.pacman.isHeld == 1) {
+      this.pacman.direction = 0;
+      this.pacman.move(this.pacman.direction);
+      this.pacman.isHeld = 0;
+    }
+  }
+  if (keyCode === SHIFT) {
+    this.setup();
+    this.run();
+    // window.location.reload();
+  }
+  if (keyCode === UP_ARROW) {
+    this.player.y -= this.brickSize;
+  }
+  if (keyCode === DOWN_ARROW) {
+    this.player.y += this.brickSize;
+  }
+}
+
 
 
 }

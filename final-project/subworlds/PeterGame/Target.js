@@ -18,11 +18,10 @@ class Target {
   }
 
   isGameOver( player ) {
-    // let t = new THREE.Box3().setFromObject( this.mesh );
-    // let p = new THREE.Box3().setFromObject( player );
     if ( player.position.x >= -25  && player.position.x <= 25 &&
          player.position.y >= -25  && player.position.y <= 25 &&
-         player.position.z >= -275 && player.position.z <= -225) {
+         player.position.z >= -375 && player.position.z <= -325) {
+      // console.log("Win!")
       return true;
     }
     return false;

@@ -8,7 +8,7 @@ class Mover {
 
     this.displayImage = loadImage(_displayImage);
     this.running = [this.run1,this.run2,this.run3,this.run4,this.run2,this.run3,this.run2];
-    this.position = createVector(30, _worldHeight); // start: 30
+    this.position = createVector(3850, _worldHeight); // start: 30 3850
     this.velocity = createVector(0, 0);
     this.acceleration = createVector(0, 0);
     this.x = 0;

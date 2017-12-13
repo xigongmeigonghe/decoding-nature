@@ -26,9 +26,9 @@ function keyPressed(){
     window.location.reload();
   }
   if (keyCode === UP_ARROW) {
-    yufeiGame.player.y -= 32;
+    yufeiGame.player.y -= yufeiGame.brickSize;
   }
   if (keyCode === DOWN_ARROW) {
-    yufeiGame.player.y += 32;
+    yufeiGame.player.y += yufeiGame.brickSize;  
   }
 }

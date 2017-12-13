@@ -1,9 +1,9 @@
-var game = new LuizeGame();
+var luizeGame = new LuizeGame();
 
 function setup() {
-  game.setup();
+  luizeGame.setup();
 }
 
 function draw() {
-  game.run();
+  luizeGame.run();
 }
