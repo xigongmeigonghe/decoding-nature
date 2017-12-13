@@ -39,12 +39,13 @@
     background(255);
 
     push();
+    fill(0);
     textSize(16);
     textAlign(CENTER);
-    text("/ 8",88,26.49);
+    text("/ 8",94,14.49);
     textSize(15);
     textAlign(CENTER);
-    text("Press Button A to Fly Up",83,50);
+    text("Press Button A to Fly Up",85,36);
     pop();
 
     if (luizesCrazyGlobalVariableHAHAHAHA_butreally_gameLose == false) {
@@ -101,7 +102,7 @@
           this.coins[j].hit = true;
           if (this.coins[j].colorValue == 1) {
            this.score++
-           if (this.score >= 2 && !this.reachedScore){
+           if (this.score >= 8 && !this.reachedScore){
             this.scoreIsReached();
             setTimeout(function(){
               console.log("in timeout");
