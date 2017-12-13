@@ -4,7 +4,7 @@ class Textbox {
     this.position.x += -50;
     this.position.y += -400;
     this.width = 400;
-    this.height = 100;
+    this.height = 120;
     this.message = _message;
   }
 
